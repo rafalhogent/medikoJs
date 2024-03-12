@@ -1,0 +1,3 @@
+
+### Get sleeps
+GET http://localhost:3004/sleep
