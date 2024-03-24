@@ -1,10 +1,9 @@
 <script setup lang="ts">
 
-import TimelineBoard from 'components/TimelineBoard.vue';
 </script>
 
 <template>
   <q-page class="row items-center justify-evenly">
-    <TimelineBoard />
+    <h3>Sleep&Dream page</h3>
   </q-page>
 </template>

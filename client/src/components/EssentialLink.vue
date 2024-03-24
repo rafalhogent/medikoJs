@@ -1,15 +1,8 @@
-<template>
-  <q-item
-    clickable
-    tag="a"
-    target="_blank"
-    :href="link"
-  >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
+<template title="titelek">
+  <q-item clickable tag="a" :target="link ? 'blank' : undefined" :href="link" :to="route">
+    <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" />
+      <!-- <q-tooltip self="center right">{{ $props.title }}</q-tooltip> -->
     </q-item-section>
 
     <q-item-section>
@@ -25,10 +18,10 @@ export interface EssentialLinkProps {
   caption?: string;
   link?: string;
   icon?: string;
+  route?: string;
 }
 withDefaults(defineProps<EssentialLinkProps>(), {
   caption: '',
-  link: '#',
   icon: '',
 });
 </script>
