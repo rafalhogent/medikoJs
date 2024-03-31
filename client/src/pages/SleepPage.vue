@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getAllSleeps } from '../services/sleep.service'
+import { getAllSleeps } from 'src/services/sleep.service'
 import { SleepDto } from 'src/models/sleep/sleep.dto';
 
 const sleeps = ref<SleepDto[]>([])
