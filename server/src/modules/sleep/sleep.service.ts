@@ -16,8 +16,11 @@ export class SleepService {
     return 'This action adds a new sleep';
   }
 
-  findAll() {
-    return this.sleepRepo.find();
+  async findAll() {
+    const res = await this.sleepRepo.find({
+      relations: { interruptions: true },
+    });
+    return res;
   }
 
   findOne(id: number) {
