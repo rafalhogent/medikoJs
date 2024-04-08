@@ -13,7 +13,7 @@ export class SleepService {
   ) {}
 
   create(createSleepDto: CreateSleepDto) {
-    return 'This action adds a new sleep';
+    return this.sleepRepo.save(createSleepDto);
   }
 
   async findAll() {

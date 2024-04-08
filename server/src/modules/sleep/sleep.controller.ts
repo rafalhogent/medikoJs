@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SleepService } from './sleep.service';
 import { CreateSleepDto } from './dto/create-sleep.dto';
 import { UpdateSleepDto } from './dto/update-sleep.dto';

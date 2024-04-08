@@ -15,6 +15,6 @@ export class Sleep {
   @Column({ length: 255 })
   note: string;
 
-  @OneToMany(() => Interruption, (inter) => inter.sleep, {nullable:true})
+  @OneToMany(() => Interruption, (inter) => inter.sleep, { nullable: true })
   interruptions?: Interruption[];
 }
