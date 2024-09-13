@@ -2,12 +2,12 @@
 import { plainToInstance } from 'class-transformer';
 import { DateTime } from 'luxon';
 import { CreateSleepDto } from 'src/models/sleep/create.sleep.dto';
-import { createNewSleep } from 'src/services/sleep.service';
+import { createNewSleep } from 'src/services/cloud/sleep.service';
 import { ref } from 'vue';
 
 const note = ref<string | undefined>(undefined)
-const sleepBeginDate = ref(DateTime.now().startOf('day').plus({ hours: -2 }).toFormat('yyyy-LL-dd HH:MM'))
-const wakeupDate = ref(DateTime.now().startOf('day').plus({ hours: 7 }).toFormat('yyyy-LL-dd HH:MM'))
+const sleepBeginDate = ref(DateTime.now().startOf('day').plus({ hours: -2 }).toFormat('yyyy-LL-dd HH:mm'))
+const wakeupDate = ref(DateTime.now().startOf('day').plus({ hours: 7 }).toFormat('yyyy-LL-dd HH:mm'))
 
 const submitForm = () => {
     const newSleepNote = plainToInstance(CreateSleepDto, {

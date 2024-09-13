@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getAllSleeps } from 'src/services/sleep.service'
+import { getAllSleeps } from 'src/services/cloud/sleep.service'
 import { SleepDto } from 'src/models/sleep/sleep.dto';
 import { CreateSleepDto } from 'src/models/sleep/create.sleep.dto';
 import SleepCard from 'src/components/sleep-dream/SleepCard.vue';
@@ -13,7 +13,6 @@ const showFormDialog = ref(false);
 
 onMounted(async () => {
   sleeps.value = await getAllSleeps();
-
 })
 
 const handleAddNewSleep = () => {

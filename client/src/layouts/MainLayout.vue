@@ -48,9 +48,10 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: 'mdi-flask-empty-outline',
   },
   {
-    title: 'Measurements',
+    title: 'Logbooks',
     caption: 'Body parameters',
     icon: 'mdi-scale',
+    route: '/logbook'
   },
   {
     title: 'Medications',
