@@ -23,13 +23,13 @@ const columns = computed(() => {
   const cols: QTableProps['columns'] = [
     {
       name: 'moment',
-      label: 'Date & Time',
+      label: 'moment',
       field: (item: Log) =>
         item.moment
           ? DateTime.fromJSDate(item.moment).toFormat('yyyy-LL-dd HH:mm')
           : ' ? ',
       align: 'center',
-      style: 'width: 70px',
+      style: 'width: 95px; min-width: 85px; padding: 10px 0px',
     },
     {
       name: 'comment',
@@ -51,7 +51,8 @@ const columns = computed(() => {
       if (field) {
         cols.splice(cols.length - 1, 0, {
           name: field,
-          headerStyle: 'white-space:pre-wrap; word-wrap:break-word',
+      
+          headerStyle: 'white-space:pre-wrap; ',
           label: `${field}${unit ? `\n( ${unit} )` : ''}`,
           field: (l: Log) => {
             const vl = l[vname as keyof Log];
@@ -105,15 +106,15 @@ onMounted(() => {
 
 <template>
   <q-page class="">
-
     <div class="">
       <q-table
         style="height: 100%"
         :grid="false && $q.screen.lt.sm"
         :dense="$q.screen.lt.md"
         wrapCells
+        separator="horizontal"
         bordered
-        :title="currentLogbook?.name ?? ''"
+        :title="currentLogbook?.name ?? '?'"
         :rows="currentLogbook?.logs ?? []"
         :columns="columns"
         row-key="index"
@@ -122,6 +123,9 @@ onMounted(() => {
         v-on:row-click="editLog"
       >
         <template v-slot:top>
+          <h6 class="q-my-md text-uppercase">
+            {{ currentLogbook?.name ? currentLogbook.name : '?' }}
+          </h6>
           <q-space />
           <q-btn
             color="primary"

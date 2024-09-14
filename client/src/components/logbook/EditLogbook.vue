@@ -144,13 +144,13 @@ onMounted(() => {
         <q-input
           v-for="vl in valueInputs"
           autofocus
-          class="q-my-xs"
+          class="q-my-xs q-pa-none"
           v-model.number="vl.fieldValue"
           type="number"
-          outlined
+          outlined      
           style="max-width: 200px"
           :label="vl.fieldName"
-          input-style="text-align: right; "
+          input-style="text-align: right; letter-spacing: 2px; margin-right: 3px"
         />
       </q-card-section>
 

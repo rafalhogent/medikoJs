@@ -10,7 +10,8 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
+        <q-space />
+        
         <q-tabs
           v-model="appStore.selectedTab"
           shrink
@@ -34,6 +35,7 @@
         >
           Mediko
         </q-toolbar-title>
+        <q-space />
       </q-toolbar>
     </q-header>
 
