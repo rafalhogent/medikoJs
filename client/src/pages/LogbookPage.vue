@@ -5,12 +5,15 @@ import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import { computed, onMounted, Ref, ref } from 'vue';
 import EditLogbook from 'src/components/logbook/EditLogbook.vue';
 import { DateTime } from 'luxon';
+import { useAppStore } from 'src/stores/app.store';
 
 //#region refs, computed
 const logbooks: Ref<Logbook[]> = ref([]);
 const currentLogbook = computed(() => {
-  return logbooks.value.find((lb) => lb.id.toString() == tab.value);
+  return logbooks.value.find((lb) => lb.id.toString() == appStore.selectedTab);
 });
+
+const appStore = useAppStore();
 
 const showDialog: Ref<boolean> = ref(false);
 const currentLog: Ref<Log | undefined> = ref(undefined);
@@ -62,14 +65,6 @@ const columns = computed(() => {
   return cols;
 });
 
-const tab = ref('1');
-const tabs = computed(() => {
-  return logbooks.value.map((lb) => ({
-    name: lb.id,
-    icon: lb.icon,
-    label: lb.name,
-  }));
-});
 //#endregion
 
 //#region hooks, handlers
@@ -98,21 +93,18 @@ const onDialogSubmitted = (log: Log) => {
 
 onMounted(() => {
   logbooks.value = LogbookLocalService.getDefaultLogbooks();
+
+  appStore.toolbarTabs = logbooks.value.map((lb) => ({
+    name: lb.id,
+    icon: lb.icon,
+    label: lb.name,
+  }));
 });
 //#endregion
 </script>
 
 <template>
   <q-page class="">
-    <q-tabs
-      v-model="tab"
-      inline-label
-      :dense="$q.screen.lt.sm"
-      :outside-arrows="!$q.screen.lt.sm"
-      class="bg-primary text-white shadow-2"
-    >
-      <q-tab v-for="t in tabs" :name="t.name" :icon="t.icon" :label="t.label" />
-    </q-tabs>
 
     <div class="">
       <q-table
