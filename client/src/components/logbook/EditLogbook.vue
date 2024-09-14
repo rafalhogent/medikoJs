@@ -83,7 +83,7 @@ onMounted(() => {
       if (field) {
         inputFIelds.push({
           propName: vname,
-          fieldName: field,
+          fieldName: `${field} ${unit ? ` ( ${unit} )` : ''}`,
           fieldValue: lg ? (lg as any)[vname] : undefined,
           unitName: unit,
         });
@@ -96,15 +96,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <q-card style="width: 90%; max-width: 500px">
-    <q-form class="q-gutter-md" @submit="submitForm">
+  <q-card style="width: 100%; max-width: 500px">
+    <q-form class="q-gutter-sm" @submit="submitForm">
       <q-card-section>
         <div class="text-h6">
           {{ $props.log ? 'Edit ' : 'Create ' }} {{ $props.logbook?.name }} log
         </div>
       </q-card-section>
 
-      <div class="q-pa-md" style="max-width: 300px">
+      <div class="q-px-sm" style="max-width: 300px">
         <q-input filled v-model="logDate" :label="'Log moment...'">
           <template v-slot:prepend>
             <q-icon name="event" class="cursor-pointer">
@@ -140,15 +140,17 @@ onMounted(() => {
         </q-input>
       </div>
 
-      <q-card-section class="q-my-md">
+      <q-card-section class="q-my-xs">
         <q-input
           v-for="vl in valueInputs"
+          autofocus
+          class="q-my-xs"
           v-model.number="vl.fieldValue"
           type="number"
-          filled
-          style="max-width: 70%"
-          :suffix="vl.unitName"
+          outlined
+          style="max-width: 200px"
           :label="vl.fieldName"
+          input-style="text-align: right; "
         />
       </q-card-section>
 
@@ -157,7 +159,6 @@ onMounted(() => {
           class="q-my-md"
           dense
           v-model="comment"
-          autofocus
           autogrow
           placeholder="Comment ..."
         />

@@ -93,21 +93,25 @@ export class LogbookLocalService {
 
     const deflogbooks = LogbookLocalService.getDefaultLogbooks();
 
-    if (!deflogbooks) {
+    if (!deflogbooks?.length) {
       LocalStorage.setItem(DEF_LOGBOOKS, logbooks);
     }
   }
 
   static getDefaultLogbooks(): Logbook[] {
-    const deflogbooks = LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
-    deflogbooks.forEach((lgb) => {
-      lgb.logs.forEach((l) => {
-        if (l.moment) {
-          l.moment = DateTime.fromISO(l.moment.toString()).toJSDate();
-        }
+    const deflogbooks1 = LocalStorage.getItem(DEF_LOGBOOKS);
+    if (deflogbooks1) {
+      const deflogbooks = deflogbooks1 as Logbook[];
+      deflogbooks.forEach((lgb) => {
+        lgb.logs.forEach((l) => {
+          if (l.moment) {
+            l.moment = DateTime.fromISO(l.moment.toString()).toJSDate();
+          }
+        });
       });
-    });
-    return deflogbooks;
+      return deflogbooks;
+    }
+    return [];
   }
 
   static saveDefaultLogbooks(logbooks: Logbook[]) {

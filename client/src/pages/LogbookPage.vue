@@ -25,15 +25,15 @@ const columns = computed(() => {
         item.moment
           ? DateTime.fromJSDate(item.moment).toFormat('yyyy-LL-dd HH:mm')
           : ' ? ',
-      align: 'left',
-      style: 'width: 80px',
+      align: 'center',
+      style: 'width: 70px',
     },
     {
       name: 'comment',
-      label: 'Comment',
+      label: 'comment',
       field: 'comment',
       align: 'left',
-      style: 'max-width: 100px',
+      style: '',
     },
   ];
 
@@ -48,10 +48,11 @@ const columns = computed(() => {
       if (field) {
         cols.splice(cols.length - 1, 0, {
           name: field,
-          label: field,
+          headerStyle: 'white-space:pre-wrap; word-wrap:break-word',
+          label: `${field}${unit ? `\n( ${unit} )` : ''}`,
           field: (l: Log) => {
             const vl = l[vname as keyof Log];
-            return vl ? `${vl} ${unit ?? ''}` : '';
+            return vl ? `${vl}` : '';
           },
           style: `width: 100px`,
         });
@@ -61,7 +62,7 @@ const columns = computed(() => {
   return cols;
 });
 
-const tab = ref('2');
+const tab = ref('1');
 const tabs = computed(() => {
   return logbooks.value.map((lb) => ({
     name: lb.id,
@@ -102,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <q-page class="q">
+  <q-page class="">
     <q-tabs
       v-model="tab"
       inline-label
@@ -113,10 +114,10 @@ onMounted(() => {
       <q-tab v-for="t in tabs" :name="t.name" :icon="t.icon" :label="t.label" />
     </q-tabs>
 
-    <div class="q-pa-xs">
+    <div class="">
       <q-table
         style="height: 100%"
-        :grid="$q.screen.lt.sm"
+        :grid="false && $q.screen.lt.sm"
         :dense="$q.screen.lt.md"
         wrapCells
         bordered
