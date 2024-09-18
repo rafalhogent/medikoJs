@@ -51,7 +51,7 @@ const columns = computed(() => {
       if (field) {
         cols.splice(cols.length - 1, 0, {
           name: field,
-      
+
           headerStyle: 'white-space:pre-wrap; ',
           label: `${field}${unit ? `\n( ${unit} )` : ''}`,
           field: (l: Log) => {
@@ -80,12 +80,8 @@ const onDialogSubmitted = (log: Log) => {
   );
   if (ourLogbook && log) {
     const myLog = ourLogbook.logs.find((l) => l.id == log.id);
-    if (myLog) {
-      for (const key in myLog) {
-        if (Object.prototype.hasOwnProperty.call(myLog, key)) {
-          (myLog as any)[key] = (log as any)[key];
-        }
-      }
+    if (myLog) {    
+      myLog.update(log);      
     } else {
       ourLogbook.logs.push(log);
     }

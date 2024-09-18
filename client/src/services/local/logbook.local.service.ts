@@ -2,6 +2,7 @@ import { LocalStorage } from 'quasar';
 import { Log, Logbook } from 'src/models/logbook/logbook';
 import { DEF_LOGBOOKS } from './local-keys';
 import { DateTime } from 'luxon';
+import { plainToInstance } from 'class-transformer';
 
 export class LogbookLocalService {
   static ensureDefaultLogbooks() {
@@ -103,6 +104,7 @@ export class LogbookLocalService {
     if (deflogbooks1) {
       const deflogbooks = deflogbooks1 as Logbook[];
       deflogbooks.forEach((lgb) => {
+        lgb.logs = plainToInstance(Log, lgb.logs);
         lgb.logs.forEach((l) => {
           if (l.moment) {
             l.moment = DateTime.fromISO(l.moment.toString()).toJSDate();
@@ -124,11 +126,7 @@ export class LogbookLocalService {
     if (ourLogbook) {
       const existingLog = ourLogbook.logs.find((l) => l.id == lg.id);
       if (existingLog) {
-        for (const key in existingLog) {
-          if (Object.prototype.hasOwnProperty.call(existingLog, key)) {
-            (existingLog as any)[key] = (lg as any)[key];
-          }
-        }
+        existingLog.update(lg);
       } else {
         ourLogbook.logs.push(lg);
       }

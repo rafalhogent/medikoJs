@@ -19,7 +19,7 @@ export class Logbook extends TrackedEntity {
   precision4?: number = undefined;
   icon?: string
   isChoosen: boolean = false;
-  logs: Log[] = [];
+  logs: Log[] = []; 
 }
 
 export class Log extends TrackedEntity {
@@ -32,4 +32,14 @@ export class Log extends TrackedEntity {
   value3?: number;
   value4?: number;
   comment?: string;
+
+  update(newLog: Log) : void {
+    this.moment = newLog.moment
+    this.value1 = newLog.value1
+    this.value2 = newLog.value2
+    this.value3 = newLog.value3
+    this.value4 = newLog.value4
+    this.comment = newLog.comment
+    this.updatedAt = new Date();
+  }
 }
