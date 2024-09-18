@@ -30,6 +30,9 @@ const emit = defineEmits({
   submited(payload: Log) {
     return true;
   },
+  delete(id: string) {
+    return true;
+  },
 });
 //#endregion
 
@@ -65,6 +68,13 @@ const submitForm = () => {
     } finally {
       emit('submited', lg);
     }
+  }
+};
+
+const onDeleteClick = () => {
+  if (props.log && props.logbook) {
+    emit('delete', props.log.id);
+    LogbookLocalService.removeLog(props.log.id, props.logbook?.id);
   }
 };
 
@@ -147,7 +157,7 @@ onMounted(() => {
           class="q-my-xs q-pa-none"
           v-model.number="vl.fieldValue"
           type="number"
-          outlined      
+          outlined
           style="max-width: 200px"
           :label="vl.fieldName"
           input-style="text-align: right; letter-spacing: 2px; margin-right: 3px"
@@ -165,8 +175,24 @@ onMounted(() => {
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup />
-        <q-btn flat label="Save" v-close-popup type="submit" />
+        <q-btn
+          v-if="props.log"
+          flat
+          label="Delete"
+          icon="delete"
+          color="red"
+          v-close-popup
+          @click="onDeleteClick"
+        />
+        <q-space />
+        <q-btn icon="close" color="secondary" label="Cancel" v-close-popup />
+        <q-btn
+          icon="save"
+          color="primary"
+          label="Save"
+          v-close-popup
+          type="submit"
+        />
       </q-card-actions>
     </q-form>
   </q-card>

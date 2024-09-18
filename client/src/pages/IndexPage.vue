@@ -1,6 +1,8 @@
 <script setup lang="ts">
-
 import TimelineBoard from 'components/TimelineBoard.vue';
+import { useAppStore } from 'src/stores/app.store';
+const appStore = useAppStore();
+appStore.toolbarTabs = [];
 </script>
 
 <template>

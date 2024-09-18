@@ -80,22 +80,41 @@ const onDialogSubmitted = (log: Log) => {
   );
   if (ourLogbook && log) {
     const myLog = ourLogbook.logs.find((l) => l.id == log.id);
-    if (myLog) {    
-      myLog.update(log);      
+    if (myLog) {
+      myLog.update(log);
     } else {
       ourLogbook.logs.push(log);
     }
+  }
+  currentLog.value = undefined;
+};
+
+const onDeleteLog = (id: string) => {
+  const ourLogbook = logbooks.value.find(
+    (lb) => lb.id == currentLogbook.value?.id,
+  );
+  if (ourLogbook && id) {
+    let idx: number | undefined = undefined;
+    const ourLog = ourLogbook.logs.find((l, i) => {
+      idx = i;
+      return l.id == id;
+    });
+
+    if (idx) ourLogbook.logs.splice(idx, 1);
+    currentLog.value = undefined;
   }
 };
 
 onMounted(() => {
   logbooks.value = LogbookLocalService.getDefaultLogbooks();
-
   appStore.toolbarTabs = logbooks.value.map((lb) => ({
     name: lb.id,
     icon: lb.icon,
     label: lb.name,
   }));
+  if (logbooks.value.length && !appStore.selectedTab) {
+    appStore.selectedTab = logbooks.value[0].id;
+  }
 });
 //#endregion
 </script>
@@ -104,6 +123,7 @@ onMounted(() => {
   <q-page class="">
     <div class="">
       <q-table
+        v-if="!!currentLogbook"
         style="height: 100%"
         :grid="false && $q.screen.lt.sm"
         :dense="$q.screen.lt.md"
@@ -139,6 +159,7 @@ onMounted(() => {
       v-bind:logbook="currentLogbook"
       v-bind:log="currentLog"
       @submited="onDialogSubmitted"
+      @delete="onDeleteLog"
     />
   </q-dialog>
 </template>

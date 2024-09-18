@@ -100,11 +100,13 @@ export class LogbookLocalService {
   }
 
   static getDefaultLogbooks(): Logbook[] {
-    const deflogbooks1 = LocalStorage.getItem(DEF_LOGBOOKS);
+    const deflogbooks1 = LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
     if (deflogbooks1) {
-      const deflogbooks = deflogbooks1 as Logbook[];
+      const deflogbooks = deflogbooks1.filter((lb) => !lb.isDeleted);
       deflogbooks.forEach((lgb) => {
-        lgb.logs = plainToInstance(Log, lgb.logs);
+        lgb.logs = lgb.logs
+          .filter((l) => !l.isDeleted)
+          .map((l) => plainToInstance(Log, l));
         lgb.logs.forEach((l) => {
           if (l.moment) {
             l.moment = DateTime.fromISO(l.moment.toString()).toJSDate();
@@ -131,6 +133,20 @@ export class LogbookLocalService {
         ourLogbook.logs.push(lg);
       }
       LogbookLocalService.saveDefaultLogbooks(logBooks);
+    } else {
+      throw new Error('Logbook not found');
+    }
+  }
+
+  static removeLog(id: string, logBookId: string) {
+    const logBooks = LogbookLocalService.getDefaultLogbooks();
+    const ourLogbook = logBooks.find((lb) => lb.id == logBookId);
+    if (ourLogbook) {
+      const existingLog = ourLogbook.logs.find((l) => l.id == id);
+      if (existingLog) {
+        existingLog.makeDeleted();
+        LogbookLocalService.saveDefaultLogbooks(logBooks);
+      }
     } else {
       throw new Error('Logbook not found');
     }

@@ -17,9 +17,9 @@ export class Logbook extends TrackedEntity {
   field4?: string;
   unit4?: string;
   precision4?: number = undefined;
-  icon?: string
+  icon?: string;
   isChoosen: boolean = false;
-  logs: Log[] = []; 
+  logs: Log[] = [];
 }
 
 export class Log extends TrackedEntity {
@@ -33,13 +33,26 @@ export class Log extends TrackedEntity {
   value4?: number;
   comment?: string;
 
-  update(newLog: Log) : void {
-    this.moment = newLog.moment
-    this.value1 = newLog.value1
-    this.value2 = newLog.value2
-    this.value3 = newLog.value3
-    this.value4 = newLog.value4
-    this.comment = newLog.comment
+  update(newLog: Log): void {
+    this.moment = newLog.moment;
+    this.value1 = newLog.value1;
+    this.value2 = newLog.value2;
+    this.value3 = newLog.value3;
+    this.value4 = newLog.value4;
+    this.comment = newLog.comment;
     this.updatedAt = new Date();
+  }
+
+  makeDeleted() {
+    this.moment = null;
+    delete this.value1;
+    delete this.value2;
+    delete this.value3;
+    delete this.value4;
+    delete this.comment;
+    delete this.createdAt;
+    delete this.updatedAt;
+    this.isDeleted = true;
+    this.deletedAt = new Date();
   }
 }
