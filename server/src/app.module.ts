@@ -5,11 +5,13 @@ import * as dotenv from "dotenv";
 import { SleepModule } from './modules/sleep/sleep.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from 'db/config/data-source';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 dotenv.configDotenv()
 
 @Module({
-  imports: [ TypeOrmModule.forRoot(dataSourceOptions), SleepModule],
+  imports: [ TypeOrmModule.forRoot(dataSourceOptions), SleepModule, AuthModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,0 +1,20 @@
+
+POST {{APP_URL}}:{{APP_PORT}}/auth/login
+Content-Type: application/json
+{"username": "john", "password": "changeme"}
+
+{{
+  $global.accesstoken=response.parsedBody.access_token;
+// $global.refreshtoken=response.parsedBody.RefreshToken;
+}}
+
+### USERINFO
+GET {{$global.baseuri}}identity/userinfo
+Authorization: Bearer {{$global.access_token}}
+
+POST {{APP_URL}}:{{APP_PORT}}/auth/register
+Content-Type: application/json
+{"name": "john5", "pass": "changeme"}
+
+GET {{APP_URL}}:{{APP_PORT}}/auth/profile
+Authorization: Bearer {{$global.accesstoken}}
