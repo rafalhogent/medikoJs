@@ -10,8 +10,11 @@ export class UsersService {
   ) {}
 
   async findOne(name: string): Promise<User | undefined> {
-
     return this.userRepo.findOne({ where: { name: Equal(name) } });
+  }
+
+  async findById(userId: number) {
+    return this.userRepo.findOneBy({ id: Equal(userId) });
   }
 
   async create(username: string, hashpass: string) {

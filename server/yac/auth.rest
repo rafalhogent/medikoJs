@@ -1,20 +1,46 @@
 
+### LOGIN
 POST {{APP_URL}}:{{APP_PORT}}/auth/login
 Content-Type: application/json
 {"username": "john", "password": "changeme"}
 
 {{
-  $global.accesstoken=response.parsedBody.access_token;
-// $global.refreshtoken=response.parsedBody.RefreshToken;
+  $global.accesstoken = response.parsedBody.access_token;
+  $global.refreshtoken = response.parsedBody.refresh_token;
+  $global.clientid = response.parsedBody.clientId 
 }}
 
-### USERINFO
-GET {{$global.baseuri}}identity/userinfo
-Authorization: Bearer {{$global.access_token}}
+###
 
+
+### REGISTER
 POST {{APP_URL}}:{{APP_PORT}}/auth/register
 Content-Type: application/json
-{"name": "john5", "pass": "changeme"}
+{"username": "anna", "password": "changeme2"}
+{{
+  $global.accesstoken=response.parsedBody.access_token;
+  $global.refreshtoken=response.parsedBody.refresh_token;
+  $global.clientid = response.parsedBody.clientId 
+}}
 
+###
+
+
+### USERINFO
 GET {{APP_URL}}:{{APP_PORT}}/auth/profile
 Authorization: Bearer {{$global.accesstoken}}
+
+###
+
+
+### REFRESH TOKENS
+POST {{APP_URL}}:{{APP_PORT}}/auth/refresh
+Authorization: Bearer {{$global.refreshtoken}}
+Client: {{$global.clientid}}
+
+{{
+  $global.accesstoken=response.parsedBody.access_token;
+  $global.refreshtoken=response.parsedBody.refresh_token;
+}}
+
+###
