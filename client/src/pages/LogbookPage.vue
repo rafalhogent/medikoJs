@@ -102,6 +102,7 @@ const onDeleteLog = (id: string) => {
 
     if (idx) ourLogbook.logs.splice(idx, 1);
     currentLog.value = undefined;
+    showDialog.value = false;
   }
 };
 
