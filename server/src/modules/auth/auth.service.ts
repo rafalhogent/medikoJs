@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { Tokens } from './models/auth.types';
+import { AuthResponse, Tokens } from './models/auth.types';
 import { JwtPayload } from './models/jwtPayload.type';
 import { jwtConstants } from './constants';
 import { RefreshToken } from './models/refresh-token.entity';
@@ -29,7 +29,7 @@ export class AuthService {
     username: string,
     pass: string,
     clientId?: string,
-  ): Promise<Tokens> {
+  ): Promise<AuthResponse> {
     const user = await this.usersService.findOne(username);
 
     if (!user || !(await bcrypt.compare(pass, user.password))) {
@@ -44,7 +44,7 @@ export class AuthService {
       newTokens.refresh_token,
     );
 
-    return newTokens;
+    return {...newTokens, user: user.name};
   }
 
   async register(username: string, pass: string): Promise<Tokens> {

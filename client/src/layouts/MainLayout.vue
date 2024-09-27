@@ -70,11 +70,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import EssentialLink, {
   EssentialLinkProps,
 } from 'components/EssentialLink.vue';
 import { useAppStore } from 'src/stores/app.store';
+import { LogbookLocalService } from 'src/services/local/logbook.local.service';
+import Factory from 'src/services/service-factory';
 
 const essentialLinks: EssentialLinkProps[] = [
   {
@@ -130,6 +132,13 @@ const essentialLinks: EssentialLinkProps[] = [
     title: 'Settings',
     caption: 'Application & user-profile settings',
     icon: 'mdi-account-cog',
+    route: '/settings'
+  },
+  {
+    title: 'Account',
+    caption: 'Login/register to sync data with server',
+    icon: 'mdi-account',
+    route: '/account'
   },
 ];
 const leftDrawerOpen = ref(false);
@@ -138,4 +147,9 @@ const appStore = useAppStore();
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
+onMounted(() => {
+  LogbookLocalService.ensureDefaultLogbooks();
+  Factory.getAuthService().loadAuthDataFromStorage();
+});
 </script>

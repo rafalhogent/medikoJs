@@ -1,8 +1,12 @@
 import { defineStore } from 'pinia';
-import { QTabProps, QTabsProps } from 'quasar';
+import { QTabProps } from 'quasar';
+import { Ref, ref } from 'vue';
 
 export const useAppStore = defineStore('appStore', () => {
-  const toolbarTabs: QTabProps[] = [];
-  const selectedTab = '';
-  return { toolbarTabs, selectedTab };
+  const toolbarTabs: Ref<QTabProps[]> = ref([]);
+  const selectedTab = ref('');
+
+  const username: Ref<string | undefined> = ref(undefined);
+
+  return { toolbarTabs, selectedTab, username };
 });
