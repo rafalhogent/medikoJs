@@ -2,7 +2,7 @@
 import { QTableProps } from 'quasar';
 import { Log, Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
-import { computed, onMounted, Ref, ref } from 'vue';
+import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 import EditLogbook from 'src/components/logbook/EditLogbook.vue';
 import { DateTime } from 'luxon';
 import { useAppStore } from 'src/stores/app.store';
@@ -116,6 +116,10 @@ onMounted(() => {
   if (logbooks.value.length && !appStore.selectedTab) {
     appStore.selectedTab = logbooks.value[0].id;
   }
+});
+
+onUnmounted(() => {
+  appStore.toolbarTabs = [];
 });
 //#endregion
 </script>
