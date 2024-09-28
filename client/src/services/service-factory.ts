@@ -5,7 +5,9 @@ import {
   AuthLocalService,
   IAuthLocalStorage,
 } from './local/auth.local.service';
+import { useAppStore } from 'src/stores/app.store';
 const backend_url = import.meta.env.VITE_BACKEND_BASE_URL;
+const store = useAppStore();
 
 export default class Factory {
   private static axiosClient: AxiosInstance;
@@ -22,7 +24,11 @@ export default class Factory {
       Factory.axiosClient.interceptors.response.use(
         (r) => r,
         async (error: AxiosError) => {
-          if (error.response?.status === 401 && Factory.refreshCounter < 3) {
+          if (
+            Factory.refreshCounter < 3 &&
+            (error.response?.data as any)?.message == 'BAD_TOKEN' &&
+            error.response?.status === 401
+          ) {
             Factory.refreshCounter++;
 
             const responsAfterRefresh = await this.getAuthService()
@@ -38,10 +44,14 @@ export default class Factory {
                 }
               });
             return responsAfterRefresh;
+          } else if (error.response?.status === 401) {
+            store.handleError(
+              'Unauthorized. Please login again',
+              (error.response?.data as any)?.message,
+            );
+            return (error.response?.data as any)?.message as string;
           }
-          // console.log(error.response?.data);
-          // TODO implement notification about failed request
-          //  if statusCode == 401 -> login required
+          throw error;
         },
       );
     }

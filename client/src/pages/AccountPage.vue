@@ -8,20 +8,24 @@ const store = useAppStore();
 const showLoginDialog = ref(false);
 const onInfoClick = async () => {
   const res = await Factory.getAuthService().getUserInfoFromServer();
-  console.log('user info on server: ', res);
+  if (res)
+    store.handleSuccess(
+      `You are signed in as ${res.data.username}`,
+      `client session id: ${res.data.clientId}`,
+    );
 };
 </script>
 
 <template>
   <q-page>
-    <q-card class="q-ma-xl q-pa-lg" flat>
+    <q-card class="q-my-xl q-pa-lg" flat>
       <q-card-actions align="center" vertical>
         <div class="q-mt-xl q-mb-none">
           <q-icon color="grey" name="mdi-account-box-outline" size="150px" />
         </div>
         <h5 class="q-mt-xs">{{ store.username ?? 'Not logged in' }}</h5>
       </q-card-actions>
-      <q-card-actions align="center" class="q-mb-xl">
+      <q-card-actions align="center" class="q-mb-lg q-gutter-md">
         <q-btn
           color="primary"
           icon="login"

@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios';
+import { AxiosError, AxiosInstance } from 'axios';
 import { LoginDto } from 'src/models/account/login.dto';
 import { RegisterDto } from 'src/models/account/register.dto';
 import { AuthResponse, Tokens } from 'src/models/account/tokens.type';
@@ -20,15 +20,24 @@ export class AuthService {
   }
 
   async loginToServer(dto: LoginDto) {
-    this.axiosClient.defaults.headers.common['Authorization'] = undefined;
-    const response = await this.axiosClient.post<AuthResponse>(
-      `/auth/login`,
-      dto,
-    );
-    this.storageService.saveTokensInStorage(response.data);
-    this.axiosClient.defaults.headers.common['Authorization'] =
-      `Bearer ${response.data.access_token}`;
-    store.username = response.data.user;
+    try {
+      delete this.axiosClient.defaults.headers.common['Authorization']; //= undefined;
+      const response = await this.axiosClient.post<AuthResponse>(
+        `/auth/login`,
+        dto,
+      );
+      if (response) {
+        this.storageService.saveTokensInStorage(response.data);
+        this.axiosClient.defaults.headers.common['Authorization'] =
+          `Bearer ${response.data.access_token}`;
+        store.username = response.data.user;
+        store.handleSuccess(
+          `You are successful signed in as ${store.username}`,
+        );
+      }
+    } catch (error: any) {
+      store.handleError('Failed to login', error.response?.data?.message);
+    }
   }
 
   async registerNewUser(dto: RegisterDto) {
@@ -51,7 +60,7 @@ export class AuthService {
       const response =
         await this.axiosClient.post<AuthResponse>(`/auth/refresh`);
 
-      if (response) {
+      if (response?.data) {
         this.storageService.saveTokensInStorage(response.data);
         store.username = response.data.user;
         this.axiosClient.defaults.headers.common['Authorization'] =
@@ -59,7 +68,7 @@ export class AuthService {
         return response.data;
       }
     } else {
-      console.log('No valid auth data. Please login again');
+      store.handleError('No valid auth data. Please login again');
     }
   }
 
