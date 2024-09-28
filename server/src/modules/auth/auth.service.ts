@@ -44,7 +44,7 @@ export class AuthService {
       newTokens.refresh_token,
     );
 
-    return {...newTokens, user: user.name};
+    return { ...newTokens, user: user.name };
   }
 
   async register(username: string, pass: string): Promise<Tokens> {
@@ -102,7 +102,7 @@ export class AuthService {
       user.name,
       jwt.clientId,
     );
-    return newTokens;
+    return { ...newTokens, user: user.name };
   }
 
   //#region private methods

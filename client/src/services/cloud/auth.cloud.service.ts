@@ -43,6 +43,26 @@ export class AuthService {
     store.username = response.data.user;
   }
 
+  async refreshTokens() {
+    const auth_data = this.storageService.getAuthDataFromStorage();
+    if (auth_data) {
+      this.axiosClient.defaults.headers.common['Authorization'] =
+        `Bearer ${auth_data.refresh_token}`;
+      const response =
+        await this.axiosClient.post<AuthResponse>(`/auth/refresh`);
+
+      if (response) {
+        this.storageService.saveTokensInStorage(response.data);
+        store.username = response.data.user;
+        this.axiosClient.defaults.headers.common['Authorization'] =
+          `Bearer ${response.data.access_token}`;
+        return response.data;
+      }
+    } else {
+      console.log('No valid auth data. Please login again');
+    }
+  }
+
   async getUserInfoFromServer() {
     const res = await this.axiosClient.get('auth/profile');
     return res;
