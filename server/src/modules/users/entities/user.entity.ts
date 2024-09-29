@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import Role from './role.enum';
+import { Logbook } from '@/modules/logbook/entities/logbook.entity';
 
 @Entity()
 class User {
@@ -33,6 +35,9 @@ class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Logbook, (l) => l.owner)
+  customLogbooks: Logbook[];
 }
 
 export default User;

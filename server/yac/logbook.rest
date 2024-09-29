@@ -1,0 +1,7 @@
+
+
+### GET DEFAULT LOGBOOKS
+GET {{APP_URL}}:{{APP_PORT}}/logbook
+Authorization: Bearer {{$global.accesstoken}}
+
+###
