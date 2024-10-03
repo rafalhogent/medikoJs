@@ -4,6 +4,8 @@ import { RegisterDto } from 'src/models/account/register.dto';
 import { AuthResponse, Tokens } from 'src/models/account/tokens.type';
 import { useAppStore } from 'src/stores/app.store';
 import { IAuthLocalStorage } from '../local/auth.local.service';
+import { LogbookLocalService } from '../local/logbook.local.service';
+import Factory from '../service-factory';
 
 const store = useAppStore();
 
@@ -34,6 +36,9 @@ export class AuthService {
         store.handleSuccess(
           `You are successful signed in as ${store.username}`,
         );
+        LogbookLocalService.clearLocalLogbooksData();
+        LogbookLocalService.ensureDefaultLogbooks();
+        Factory.getSyncService().syncLogbooks();
       }
     } catch (error: any) {
       store.handleError('Failed to login', error.response?.data?.message);
@@ -41,15 +46,28 @@ export class AuthService {
   }
 
   async registerNewUser(dto: RegisterDto) {
-    this.axiosClient.defaults.headers.common['Authorization'] = undefined;
-    const response = await this.axiosClient.post<AuthResponse>(
-      `/auth/register`,
-      dto,
-    );
-    this.storageService.saveTokensInStorage(response.data);
-    this.axiosClient.defaults.headers.common['Authorization'] =
-      `Bearer ${response.data.access_token}`;
-    store.username = response.data.user;
+    try {
+      this.axiosClient.defaults.headers.common['Authorization'] = undefined;
+      const response = await this.axiosClient.post<AuthResponse>(
+        `/auth/register`,
+        dto,
+      );
+      if (response) {
+        this.storageService.saveTokensInStorage(response.data);
+        this.axiosClient.defaults.headers.common['Authorization'] =
+          `Bearer ${response.data.access_token}`;
+
+        store.username = response.data.user;
+        LogbookLocalService.clearLocalLogbooksData();
+        LogbookLocalService.ensureDefaultLogbooks();
+        Factory.getSyncService().syncLogbooks();
+        store.handleSuccess(
+          `You are successful signed in as ${store.username}`,
+        );
+      }
+    } catch (error: any) {
+      store.handleError('Failed to register', error.response?.data?.message);
+    }
   }
 
   async refreshTokens() {

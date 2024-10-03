@@ -31,7 +31,7 @@ export class LogbookService {
       where: { owner: { id: userId } },
     });
 
-    clientLogbooks.forEach((clb) => {
+    clientLogbooks?.forEach((clb) => {
       const dblogbook = dbLogbooks.find((dblb) => dblb.name == clb.name);
       if (dblogbook) {
         clb.logs.forEach((cl) => {

@@ -156,4 +156,8 @@ export class LogbookLocalService {
       throw new Error('Logbook not found');
     }
   }
+
+  static clearLocalLogbooksData() {
+    LocalStorage.removeItem(DEF_LOGBOOKS);
+  }
 }

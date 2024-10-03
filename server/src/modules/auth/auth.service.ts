@@ -47,7 +47,7 @@ export class AuthService {
     return { ...newTokens, user: user.name };
   }
 
-  async register(username: string, pass: string): Promise<Tokens> {
+  async register(username: string, pass: string): Promise<AuthResponse> {
     if (!username?.length || !pass?.length)
       throw new BadRequestException('Invalid credentials');
 
@@ -62,7 +62,7 @@ export class AuthService {
     const tokens = await this.generateTokens(res.id, res.name, clientId);
     await this.updateRefreshTokenHash(res.id, clientId, tokens.refresh_token);
 
-    return tokens;
+    return { ...tokens, user: username };
   }
 
   async refreshTokens(sentTokenHeader: string) {

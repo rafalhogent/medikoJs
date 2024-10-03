@@ -3,9 +3,11 @@ import { ref } from 'vue';
 import LoginForm from '../components/account/LoginForm.vue';
 import Factory from 'src/services/service-factory';
 import { useAppStore } from 'src/stores/app.store';
+import RegisterForm from 'src/components/account/RegisterForm.vue';
 
 const store = useAppStore();
 const showLoginDialog = ref(false);
+const showRegisterDialog = ref(false);
 const onInfoClick = async () => {
   const res = await Factory.getAuthService().getUserInfoFromServer();
   if (res)
@@ -41,7 +43,7 @@ const onSyncClick = async () => {
           color="primary"
           icon="mdi-account-plus-outline"
           label="register"
-          disable
+          @click="() => (showRegisterDialog = true)"
         />
         <q-btn
           color="primary"
@@ -60,5 +62,8 @@ const onSyncClick = async () => {
   </q-page>
   <q-dialog v-model="showLoginDialog">
     <login-form />
+  </q-dialog>
+  <q-dialog v-model="showRegisterDialog">
+    <register-form />
   </q-dialog>
 </template>
