@@ -4,6 +4,7 @@ import LoginForm from '../components/account/LoginForm.vue';
 import Factory from 'src/services/service-factory';
 import { useAppStore } from 'src/stores/app.store';
 import RegisterForm from 'src/components/account/RegisterForm.vue';
+import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 
 const store = useAppStore();
 const showLoginDialog = ref(false);
@@ -20,6 +21,11 @@ const onInfoClick = async () => {
 const onSyncClick = async () => {
   store.handleSuccess('sync begun...');
   await Factory.getSyncService().syncLogbooks();
+};
+
+const onLogoutClick = () => {
+  Factory.getAuthLocalStorageService().clearLocalAuthData();
+  LogbookLocalService.clearLocalLogbooksData();
 };
 </script>
 
@@ -47,15 +53,24 @@ const onSyncClick = async () => {
         />
         <q-btn
           color="primary"
+          icon="mdi-logout"
+          label="logout"
+          @click="onLogoutClick"
+          :disable="!store.username"
+        />
+        <q-btn
+          color="primary"
           icon="mdi-account"
           label="info"
           @click="onInfoClick"
+          :disable="!store.username"
         />
         <q-btn
           color="primary"
           icon="mdi-sync"
           label="sync"
           @click="onSyncClick"
+          :disable="!store.username"
         />
       </q-card-actions>
     </q-card>
