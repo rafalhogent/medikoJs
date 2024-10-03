@@ -2,9 +2,10 @@ import { TrackedEntity } from '@/modules/common/models/tracked.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Log } from './log.entity';
 import User from '@/modules/users/entities/user.entity';
+import { Type } from 'class-transformer';
 
-const LOGBOOK_OWNER_COL = 'ownerId';
-const FK_LOGBOOK_OWNER = 'FK_logbook-owner';
+export const LOGBOOK_OWNER_COL = 'ownerId';
+export const FK_LOGBOOK_OWNER = 'FK_logbook-owner';
 
 @Entity()
 export class Logbook extends TrackedEntity {
@@ -53,7 +54,8 @@ export class Logbook extends TrackedEntity {
   @Column({ nullable: true, default: null })
   icon?: string;
 
-  @OneToMany(() => Log, (l) => l.logbook)
+  @Type(() => Log)
+  @OneToMany(() => Log, (l) => l.logbook, {cascade: true})
   logs: Log[];
 
   @ManyToOne(() => User, (u) => u.customLogbooks, { nullable: true, onDelete: 'CASCADE' })

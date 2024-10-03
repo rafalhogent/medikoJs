@@ -1,6 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+  Patch,
+} from '@nestjs/common';
 import { LogbookService } from './logbook.service';
-import { LogbookSyncDto } from './dto/logbook-sync.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('logbook')
 export class LogbookController {
@@ -11,9 +18,9 @@ export class LogbookController {
     return this.logbookService.getDefaultLogbooks();
   }
 
-  @Post()
-  syncDefaultLogbooks(@Body() syncDto: LogbookSyncDto) {
-    return 'This endpoint syncs logbooks'
+  @UseGuards(AuthGuard)
+  @Patch()
+  syncDefaultLogbooks(@Body() syncDto: any, @Request() req) {
+    return this.logbookService.syncLogbooksByUser(syncDto, req.user.sub);
   }
-
 }

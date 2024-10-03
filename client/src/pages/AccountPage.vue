@@ -14,6 +14,11 @@ const onInfoClick = async () => {
       `client session id: ${res.data.clientId}`,
     );
 };
+
+const onSyncClick = async () => {
+  store.handleSuccess('sync begun...');
+  await Factory.getSyncService().syncLogbooks();
+};
 </script>
 
 <template>
@@ -43,6 +48,12 @@ const onInfoClick = async () => {
           icon="mdi-account"
           label="info"
           @click="onInfoClick"
+        />
+        <q-btn
+          color="primary"
+          icon="mdi-sync"
+          label="sync"
+          @click="onSyncClick"
         />
       </q-card-actions>
     </q-card>

@@ -118,6 +118,10 @@ export class LogbookLocalService {
     return [];
   }
 
+  static getAllDefaultLogbooksData() {
+    return LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
+  }
+
   static saveDefaultLogbooks(logbooks: Logbook[]) {
     LocalStorage.setItem(DEF_LOGBOOKS, logbooks);
   }
