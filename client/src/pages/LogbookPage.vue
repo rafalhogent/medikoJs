@@ -107,12 +107,18 @@ const onDeleteLog = (id: string) => {
 };
 
 onMounted(() => {
-  logbooks.value = LogbookLocalService.getDefaultLogbooks();
-  appStore.toolbarTabs = logbooks.value.map((lb) => ({
+  logbooks.value = LogbookLocalService.getLocalLogbooks();
+  const tabs = logbooks.value.map((lb) => ({
     name: lb.id,
     icon: lb.icon,
     label: lb.name,
   }));
+
+  tabs.sort((a, b) => {
+    return -1 * a.label.localeCompare(b.label);
+  });
+
+  appStore.toolbarTabs = tabs;
   if (logbooks.value.length && !appStore.selectedTab) {
     appStore.selectedTab = logbooks.value[0].id;
   }

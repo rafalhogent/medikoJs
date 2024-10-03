@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { Column, PrimaryColumn } from 'typeorm';
 
 export class TrackedEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({length: 36})
   id: string;
 
   @Type(() => Date)

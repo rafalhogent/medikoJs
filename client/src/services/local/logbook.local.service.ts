@@ -3,6 +3,7 @@ import { Log, Logbook } from 'src/models/logbook/logbook';
 import { DEF_LOGBOOKS } from './local-keys';
 import { DateTime } from 'luxon';
 import { plainToInstance } from 'class-transformer';
+import { v4 as uuidv4 } from 'uuid';
 
 export class LogbookLocalService {
   static ensureDefaultLogbooks() {
@@ -10,7 +11,7 @@ export class LogbookLocalService {
       {
         ...new Logbook(),
         ...{
-          id: '1',
+          id: uuidv4(),
           name: 'weight',
           field1: 'weight',
           unit1: 'kg',
@@ -22,7 +23,7 @@ export class LogbookLocalService {
       {
         ...new Logbook(),
         ...{
-          id: '2',
+          id: uuidv4(),
           name: 'blood pressure',
           field1: 'systolic',
           precision1: 0,
@@ -37,7 +38,7 @@ export class LogbookLocalService {
       {
         ...new Logbook(),
         ...{
-          id: '3',
+          id: uuidv4(),
           name: 'temperature',
           field1: 'temperature',
           unit1: '℃',
@@ -49,7 +50,7 @@ export class LogbookLocalService {
       {
         ...new Logbook(),
         ...{
-          id: '4',
+          id: uuidv4(),
           name: 'water',
           field1: 'water',
           unit1: 'ml',
@@ -62,7 +63,7 @@ export class LogbookLocalService {
       {
         ...new Logbook(),
         ...{
-          id: '5',
+          id: uuidv4(),
           name: 'glucose',
           field1: 'glucose',
           unit1: 'mmol/L',
@@ -75,7 +76,7 @@ export class LogbookLocalService {
       {
         ...new Logbook(),
         ...{
-          id: '6',
+          id: uuidv4(),
           name: 'thyroid',
           field1: 'TSH',
           precision1: 1,
@@ -92,17 +93,17 @@ export class LogbookLocalService {
       },
     ];
 
-    const deflogbooks = LogbookLocalService.getDefaultLogbooks();
+    const deflogbooks = LogbookLocalService.getLocalLogbooks();
 
     if (!deflogbooks?.length) {
       LocalStorage.setItem(DEF_LOGBOOKS, logbooks);
     }
   }
 
-  static getDefaultLogbooks(): Logbook[] {
-    const deflogbooks1 = LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
-    if (deflogbooks1) {
-      const deflogbooks = deflogbooks1.filter((lb) => !lb.isDeleted);
+  static getLocalLogbooks(): Logbook[] {
+    const localLogbooks = LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
+    if (localLogbooks) {
+      const deflogbooks = localLogbooks.filter((lb) => !lb.isDeleted);
       deflogbooks.forEach((lgb) => {
         lgb.logs = lgb.logs
           .filter((l) => !l.isDeleted)
@@ -118,16 +119,16 @@ export class LogbookLocalService {
     return [];
   }
 
-  static getAllDefaultLogbooksData() {
+  static getAllLogbooksData() {
     return LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
   }
 
-  static saveDefaultLogbooks(logbooks: Logbook[]) {
+  static saveLogbooksData(logbooks: Logbook[]) {
     LocalStorage.setItem(DEF_LOGBOOKS, logbooks);
   }
 
   static upsertLog(lg: Log, logBookId: string) {
-    const logBooks = LogbookLocalService.getDefaultLogbooks();
+    const logBooks = LogbookLocalService.getLocalLogbooks();
     const ourLogbook = logBooks.find((lb) => lb.id == logBookId);
     if (ourLogbook) {
       const existingLog = ourLogbook.logs.find((l) => l.id == lg.id);
@@ -136,20 +137,20 @@ export class LogbookLocalService {
       } else {
         ourLogbook.logs.push(lg);
       }
-      LogbookLocalService.saveDefaultLogbooks(logBooks);
+      LogbookLocalService.saveLogbooksData(logBooks);
     } else {
       throw new Error('Logbook not found');
     }
   }
 
   static removeLog(id: string, logBookId: string) {
-    const logBooks = LogbookLocalService.getDefaultLogbooks();
+    const logBooks = LogbookLocalService.getLocalLogbooks();
     const ourLogbook = logBooks.find((lb) => lb.id == logBookId);
     if (ourLogbook) {
       const existingLog = ourLogbook.logs.find((l) => l.id == id);
       if (existingLog) {
         existingLog.makeDeleted();
-        LogbookLocalService.saveDefaultLogbooks(logBooks);
+        LogbookLocalService.saveLogbooksData(logBooks);
       }
     } else {
       throw new Error('Logbook not found');

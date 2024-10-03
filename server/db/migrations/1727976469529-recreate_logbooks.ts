@@ -1,30 +1,33 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddLogbook1727634835551 implements MigrationInterface {
-    name = 'AddLogbook1727634835551'
+export class RecreateLogbooks1727976469529 implements MigrationInterface {
+    name = 'RecreateLogbooks1727976469529'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             CREATE TABLE \`log\` (
-                \`id\` varchar(255) NOT NULL,
+                \`id\` varchar(36) NOT NULL,
+                \`createdAt\` datetime NULL,
+                \`updatedAt\` datetime NULL,
+                \`deletedAt\` datetime NULL,
+                \`isDeleted\` tinyint NOT NULL DEFAULT 0,
                 \`moment\` datetime NULL,
                 \`value1\` int NULL,
                 \`value2\` int NULL,
                 \`value3\` int NULL,
                 \`value4\` int NULL,
                 \`comment\` varchar(255) NULL,
-                \`logbookId\` varchar(255) NOT NULL,
-                \`ownerId\` int NOT NULL,
-                \`createdAt\` datetime NULL,
-                \`updatedAt\` datetime NULL,
-                \`deletedAt\` datetime NULL,
-                \`isDeleted\` tinyint NOT NULL DEFAULT 0,
+                \`logbookId\` varchar(36) NOT NULL,
                 PRIMARY KEY (\`id\`)
             ) ENGINE = InnoDB
         `);
         await queryRunner.query(`
             CREATE TABLE \`logbook\` (
-                \`id\` varchar(255) NOT NULL,
+                \`id\` varchar(36) NOT NULL,
+                \`createdAt\` datetime NULL,
+                \`updatedAt\` datetime NULL,
+                \`deletedAt\` datetime NULL,
+                \`isDeleted\` tinyint NOT NULL DEFAULT 0,
                 \`name\` varchar(255) NOT NULL,
                 \`field1\` varchar(255) NULL,
                 \`unit1\` varchar(255) NULL,
@@ -39,21 +42,14 @@ export class AddLogbook1727634835551 implements MigrationInterface {
                 \`unit4\` varchar(255) NULL,
                 \`precision4\` int NULL,
                 \`icon\` varchar(255) NULL,
-                \`ownerId\` int NULL,
-                \`createdAt\` datetime NULL,
-                \`updatedAt\` datetime NULL,
-                \`deletedAt\` datetime NULL,
-                \`isDeleted\` tinyint NOT NULL DEFAULT 0,
+                \`ownerId\` int NOT NULL,
+                UNIQUE INDEX \`UQ_Logbook_name-ownerId\` (\`ownerId\`, \`name\`),
                 PRIMARY KEY (\`id\`)
             ) ENGINE = InnoDB
         `);
         await queryRunner.query(`
             ALTER TABLE \`log\`
             ADD CONSTRAINT \`FK_log-logbook\` FOREIGN KEY (\`logbookId\`) REFERENCES \`logbook\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION
-        `);
-        await queryRunner.query(`
-            ALTER TABLE \`log\`
-            ADD CONSTRAINT \`FK_log-owner\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION
         `);
         await queryRunner.query(`
             ALTER TABLE \`logbook\`
@@ -66,10 +62,10 @@ export class AddLogbook1727634835551 implements MigrationInterface {
             ALTER TABLE \`logbook\` DROP FOREIGN KEY \`FK_logbook-owner\`
         `);
         await queryRunner.query(`
-            ALTER TABLE \`log\` DROP FOREIGN KEY \`FK_log-owner\`
+            ALTER TABLE \`log\` DROP FOREIGN KEY \`FK_log-logbook\`
         `);
         await queryRunner.query(`
-            ALTER TABLE \`log\` DROP FOREIGN KEY \`FK_log-logbook\`
+            DROP INDEX \`UQ_Logbook_name-ownerId\` ON \`logbook\`
         `);
         await queryRunner.query(`
             DROP TABLE \`logbook\`

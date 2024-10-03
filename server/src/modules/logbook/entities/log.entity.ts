@@ -1,12 +1,9 @@
 import { TrackedEntity } from '@/modules/common/models/tracked.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Logbook } from './logbook.entity';
-import User from '@/modules/users/entities/user.entity';
 import { LogDto } from '../dto/logbook-sync.dto';
 import { Type } from 'class-transformer';
 
-const FK_LOG_OWNER = 'FK_log-owner';
-const LOG_OWNER_COL = 'ownerId';
 const LOG_LOGBOOK_COL = 'logbookId';
 const FK_LOG_LOGBOOK = 'FK_log-logbook';
 
@@ -44,11 +41,6 @@ export class Log extends TrackedEntity {
     foreignKeyConstraintName: FK_LOG_LOGBOOK,
   })
   logbook: Logbook;
-
-  [LOG_OWNER_COL]: number;
-  @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
-  @JoinColumn({ name: LOG_OWNER_COL, foreignKeyConstraintName: FK_LOG_OWNER })
-  owner: User;
 
   //#region methods
   update(newLog: LogDto): void {

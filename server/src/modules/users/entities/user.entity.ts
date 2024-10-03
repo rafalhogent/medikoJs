@@ -37,7 +37,7 @@ class User {
   updated_at: Date;
 
   @OneToMany(() => Logbook, (l) => l.owner)
-  customLogbooks: Logbook[];
+  logbooks: Logbook[];
 }
 
 export default User;

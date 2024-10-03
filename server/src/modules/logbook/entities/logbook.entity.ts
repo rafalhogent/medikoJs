@@ -1,18 +1,28 @@
 import { TrackedEntity } from '@/modules/common/models/tracked.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  Unique,
+} from 'typeorm';
 import { Log } from './log.entity';
 import User from '@/modules/users/entities/user.entity';
 import { Type } from 'class-transformer';
 
 export const LOGBOOK_OWNER_COL = 'ownerId';
 export const FK_LOGBOOK_OWNER = 'FK_logbook-owner';
+export const UQ_LOGBOOK_NAME_OWNER = 'UQ_Logbook_name-ownerId';
+export const LOGBOOK_NAME_COL = 'name';
 
+@Unique(UQ_LOGBOOK_NAME_OWNER, [LOGBOOK_OWNER_COL, LOGBOOK_NAME_COL])
 @Entity()
 export class Logbook extends TrackedEntity {
   constructor() {
     super();
   }
-  @Column({ length: 255 })
+  @Column({ length: 255, name: LOGBOOK_NAME_COL })
   name!: string;
 
   @Column({ nullable: true, default: null })
@@ -55,10 +65,16 @@ export class Logbook extends TrackedEntity {
   icon?: string;
 
   @Type(() => Log)
-  @OneToMany(() => Log, (l) => l.logbook, {cascade: true})
+  @OneToMany(() => Log, (l) => l.logbook, { cascade: true })
   logs: Log[];
 
-  @ManyToOne(() => User, (u) => u.customLogbooks, { nullable: true, onDelete: 'CASCADE' })
+  @Column()
+  [LOGBOOK_OWNER_COL]: number;
+
+  @ManyToOne(() => User, (u) => u.logbooks, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: LOGBOOK_OWNER_COL,
     foreignKeyConstraintName: FK_LOGBOOK_OWNER,

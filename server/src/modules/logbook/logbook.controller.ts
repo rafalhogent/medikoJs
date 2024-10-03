@@ -13,9 +13,10 @@ import { AuthGuard } from '../auth/auth.guard';
 export class LogbookController {
   constructor(private readonly logbookService: LogbookService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.logbookService.getDefaultLogbooks();
+  getLogbooksByUser(@Request() req) {
+    return this.logbookService.getLogbooksByUser(req.user.sub);
   }
 
   @UseGuards(AuthGuard)
