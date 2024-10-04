@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TimelineBoard from 'components/TimelineBoard.vue';
+// import TimelineBoard from 'components/TimelineBoard.vue';
 import { useAppStore } from 'src/stores/app.store';
 const appStore = useAppStore();
 appStore.toolbarTabs = [];
@@ -7,6 +7,7 @@ appStore.toolbarTabs = [];
 
 <template>
   <q-page class="row items-center justify-evenly">
-    <TimelineBoard />
+    <!-- <TimelineBoard /> -->
+    <div>Welkom in Mediko App</div>
   </q-page>
 </template>

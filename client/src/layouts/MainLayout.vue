@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
         <q-space />
-        
+
         <q-tabs
           v-model="appStore.selectedTab"
           shrink
@@ -53,7 +53,6 @@
         />
       </div>
       <q-list>
-
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -84,17 +83,20 @@ const essentialLinks: EssentialLinkProps[] = [
     caption: 'Home page',
     icon: 'mdi-timeline-text-outline',
     route: '/',
+    disable: true,
   },
   {
     title: 'Sleepbook',
     caption: 'Sleep & dreams book',
     icon: 'mdi-bed',
     route: '/sleep',
+    disable: true,
   },
   {
     title: 'Labo',
     caption: 'Medical examination results',
     icon: 'mdi-flask-empty-outline',
+    disable: true,
   },
   {
     title: 'Logbooks',
@@ -106,21 +108,25 @@ const essentialLinks: EssentialLinkProps[] = [
     title: 'Medications',
     caption: 'Medications schemes',
     icon: 'mdi-pill',
+    disable: true,
   },
   {
     title: 'Meals',
     caption: 'Diet food & drinks',
     icon: 'mdi-food-apple',
+    disable: true,
   },
   {
     title: 'Docs',
     caption: 'Documentation',
     icon: 'mdi-text-box-search-outline',
+    disable: true,
   },
   {
     title: 'About',
     caption: 'Application Info',
     icon: 'mdi-information-outline',
+    disable: true,
   },
   {
     title: 'Github',
@@ -132,13 +138,14 @@ const essentialLinks: EssentialLinkProps[] = [
     title: 'Settings',
     caption: 'Application & user-profile settings',
     icon: 'mdi-account-cog',
-    route: '/settings'
+    route: '/settings',
+    disable: true,
   },
   {
     title: 'Account',
     caption: 'Login/register to sync data with server',
     icon: 'mdi-account',
-    route: '/account'
+    route: '/account',
   },
 ];
 const leftDrawerOpen = ref(false);
