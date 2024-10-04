@@ -16,16 +16,16 @@ export class Log extends TrackedEntity {
   @Column({ nullable: true, default: null })
   moment: Date | null = new Date();
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true, default: null, type: 'double' })
   value1?: number;
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true, default: null, type: 'double' })
   value2?: number;
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true, default: null, type: 'double' })
   value3?: number;
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true, default: null, type: 'double' })
   value4?: number;
 
   @Column({ length: 255, nullable: true })

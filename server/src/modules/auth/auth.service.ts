@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import ms, { StringValue } from 'ms';
 import { extractToken } from './helpers/auth.helper';
+import { v4 as uuidv4 } from 'uuid';
 // import bcrypt from 'bcrypt';
 const bcrypt = require('bcrypt');
 
@@ -169,7 +170,7 @@ export class AuthService {
   }
 
   private generateClientId() {
-    return crypto.randomUUID();
+    return uuidv4();
   }
   //#endregion
 }
