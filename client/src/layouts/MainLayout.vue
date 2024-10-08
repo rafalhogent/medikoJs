@@ -130,9 +130,9 @@ const essentialLinks: EssentialLinkProps[] = [
   },
   {
     title: 'Github',
-    caption: 'github.com/rafalhogent/mediko2js',
+    caption: 'github.com/rafalhogent/medikojs',
     icon: 'mdi-github',
-    link: 'https://github.com/rafalhogent/mediko2js',
+    link: 'https://github.com/rafalhogent/medikojs',
   },
   {
     title: 'Settings',
