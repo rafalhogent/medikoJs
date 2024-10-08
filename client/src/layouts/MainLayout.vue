@@ -137,9 +137,9 @@ const essentialLinks: EssentialLinkProps[] = [
   {
     title: 'Settings',
     caption: 'Application & user-profile settings',
-    icon: 'mdi-account-cog',
-    route: '/settings',
-    disable: true,
+    icon: 'mdi-folder-wrench-outline',
+    route: '/settings/main',
+    disable: false,
   },
   {
     title: 'Account',

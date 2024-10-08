@@ -42,6 +42,7 @@ export class RecreateLogbooks1727976469529 implements MigrationInterface {
                 \`unit4\` varchar(255) NULL,
                 \`precision4\` int NULL,
                 \`icon\` varchar(255) NULL,
+                \`isChoosen\` tinyint NOT NULL DEFAULT 0,
                 \`ownerId\` int NOT NULL,
                 UNIQUE INDEX \`UQ_Logbook_name-ownerId\` (\`ownerId\`, \`name\`),
                 PRIMARY KEY (\`id\`)

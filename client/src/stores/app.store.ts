@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { QTabProps } from 'quasar';
+import { QBreadcrumbsElProps, QTabProps } from 'quasar';
 import { Ref, ref } from 'vue';
 import { Notify } from 'quasar';
 
@@ -9,6 +9,7 @@ export const useAppStore = defineStore('appStore', () => {
 
   const username: Ref<string | undefined> = ref(undefined);
 
+  //#region ui handlers
   const handleSuccess = (message: string, caption?: string) => {
     Notify.create({
       message: message,
@@ -38,6 +39,44 @@ export const useAppStore = defineStore('appStore', () => {
       ],
     });
   };
+  //#endregion
 
-  return { toolbarTabs, selectedTab, username, handleSuccess, handleError };
+  //#region settings
+
+  const settingsCrumb: QBreadcrumbsElProps = {
+    label: 'Settings',
+    icon: 'mdi-folder-wrench-outline',
+    to: '/settings/main',
+    onClick: (e: Event) => {
+      resetSettingsPage();
+    },
+  };
+  const logbooksCrumb: QBreadcrumbsElProps = {
+    label: 'Logbooks',
+    icon: 'mdi-book-open-outline',
+    to: '/settings/logbooks',
+    onClick: (e: Event) => {
+      prepareLogbookSettingsPage();
+    },
+  };
+
+  const settingsCrumbs: Ref<QBreadcrumbsElProps[]> = ref([settingsCrumb]);
+  const prepareLogbookSettingsPage = () => {
+    settingsCrumbs.value = [settingsCrumb, logbooksCrumb];
+  };
+  const resetSettingsPage = () => {
+    settingsCrumbs.value = [settingsCrumb];
+  };
+  //#endregion
+
+  return {
+    toolbarTabs,
+    selectedTab,
+    username,
+    handleSuccess,
+    handleError,
+    settingsCrumbs,
+    prepareLogbookSettingsPage,
+    resetSettingsPage,
+  };
 });

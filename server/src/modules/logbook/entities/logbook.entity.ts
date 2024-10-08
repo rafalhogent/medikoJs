@@ -64,6 +64,9 @@ export class Logbook extends TrackedEntity {
   @Column({ nullable: true, default: null })
   icon?: string;
 
+  @Column({nullable: false, default: false})
+  isChoosen: boolean
+
   @Type(() => Log)
   @OneToMany(() => Log, (l) => l.logbook, { cascade: true })
   logs: Log[];

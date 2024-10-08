@@ -106,13 +106,19 @@ const onDeleteLog = (id: string) => {
   }
 };
 
+const onGoToSettingsCLicked = () => {
+  appStore.prepareLogbookSettingsPage();
+};
+
 onMounted(() => {
   logbooks.value = LogbookLocalService.getLocalLogbooks();
-  const tabs = logbooks.value.map((lb) => ({
-    name: lb.id,
-    icon: lb.icon,
-    label: lb.name,
-  }));
+  const tabs = logbooks.value
+    .filter((lb) => lb.isChoosen)
+    .map((lb) => ({
+      name: lb.id,
+      icon: lb.icon,
+      label: lb.name,
+    }));
 
   tabs.sort((a, b) => {
     return -1 * a.label.localeCompare(b.label);
@@ -120,7 +126,7 @@ onMounted(() => {
 
   appStore.toolbarTabs = tabs;
   if (logbooks.value.length && !appStore.selectedTab) {
-    appStore.selectedTab = logbooks.value[0].id;
+    appStore.selectedTab = appStore.toolbarTabs[0].name?.toString() ?? '';
   }
 });
 
@@ -150,6 +156,7 @@ onUnmounted(() => {
         v-on:row-click="editLog"
       >
         <template v-slot:top>
+          <!-- <q-btn icon="edit" title="Edit logbook" /> -->
           <h6 class="q-my-md text-uppercase">
             {{ currentLogbook?.name ? currentLogbook.name : '?' }}
           </h6>
@@ -160,6 +167,12 @@ onUnmounted(() => {
             :disable="false"
             label="Add Log"
             @click="editLog"
+          />
+          <q-btn
+            icon="settings"
+            title="Manage logbooks"
+            to="/settings/logbooks"
+            @click="onGoToSettingsCLicked"
           />
         </template>
       </q-table>
