@@ -37,7 +37,6 @@ export class AuthService {
           `You are successful signed in as ${store.username}`,
         );
         LogbookLocalService.clearLocalLogbooksData();
-        LogbookLocalService.ensureDefaultLogbooks();
         Factory.getSyncService().syncLogbooks();
       }
     } catch (error: any) {
@@ -58,7 +57,6 @@ export class AuthService {
           `Bearer ${response.data.access_token}`;
 
         store.username = response.data.user;
-        LogbookLocalService.clearLocalLogbooksData();
         LogbookLocalService.ensureDefaultLogbooks();
         Factory.getSyncService().syncLogbooks();
         store.handleSuccess(

@@ -9,7 +9,8 @@ onMounted(() => {
   logbooks.value = LogbookLocalService.getLocalLogbooks();
 });
 
-const onSwitch = () => {
+const onSwitch = (lb: Logbook) => {
+  lb.updatedAt = new Date();
   LogbookLocalService.saveLogbooksData(logbooks.value);
 };
 </script>
@@ -26,7 +27,10 @@ const onSwitch = () => {
       style="max-width: 500px"
     >
       <q-item-section side top>
-        <q-checkbox v-model="lb.isChoosen" @update:model-value="onSwitch" />
+        <q-checkbox
+          v-model="lb.isChoosen"
+          @update:model-value="() => onSwitch(lb)"
+        />
         <!-- <q-toggle v-model="lb.isChoosen" /> -->
       </q-item-section>
 
