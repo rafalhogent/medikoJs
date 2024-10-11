@@ -18,7 +18,7 @@ export class Logbook extends TrackedEntity {
   unit4?: string;
   precision4?: number = undefined;
   icon?: string;
-  isChoosen: boolean = false;
+  isChoosen: boolean = true;
   logs: Log[] = [];
 
   update = (updatedLogbook: Logbook) => {

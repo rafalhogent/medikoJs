@@ -3,13 +3,15 @@ import { onMounted, Ref, ref } from 'vue';
 import { Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import EditLogbook from 'src/components/logbook/EditLogbook.vue';
-
 const logbooks: Ref<Logbook[]> = ref([]);
 const showDialog: Ref<boolean> = ref(false);
 const currentLogbook: Ref<Logbook | undefined> = ref(undefined);
 
-onMounted(() => {
+const refreshLogbooks = () => {
   logbooks.value = LogbookLocalService.getLocalLogbooks();
+};
+onMounted(() => {
+  refreshLogbooks();
 });
 
 const onSwitch = (lb: Logbook) => {
@@ -21,19 +23,32 @@ const onEditClicked = (logbook: Logbook) => {
   currentLogbook.value = logbook;
   showDialog.value = true;
 };
+
+const onCreateClicked = () => {
+  currentLogbook.value = undefined;
+  showDialog.value = true;
+};
+
+const onLogbookSubmitted = () => {
+  refreshLogbooks();
+};
 </script>
 
 <template>
-  <div>
-    <!-- <q-separator spaced /> -->
-    <q-item-label header>Select visible logbooks</q-item-label>
+  <!-- <q-separator spaced /> -->
+  <div class="" style="max-width: 500px">
+    <div class="row no-wrap items-center q-mt-md q-pa-sm q-pl-lg">
+      <span class="text-subtitle2">Select visible logbooks:</span>
+      <q-space />
+      <q-btn
+        color="primary"
+        icon="mdi-pencil-plus-outline"
+        label="create"
+        @click="onCreateClicked"
+      />
+    </div>
 
-    <q-item
-      v-for="lb in logbooks"
-      tag="label"
-      v-ripple
-      style="max-width: 500px"
-    >
+    <q-item v-for="lb in logbooks" tag="label" v-ripple>
       <q-item-section side top>
         <q-checkbox
           v-model="lb.isChoosen"
@@ -66,6 +81,7 @@ const onEditClicked = (logbook: Logbook) => {
   </div>
 
   <q-dialog class="" v-model="showDialog">
-    <EditLogbook :logbook="currentLogbook" />
+    <!-- <EditLog v-bind:logbook="currentLogbook" @submited="onDialogSubmitted" /> -->
+    <EditLogbook :logbook="currentLogbook" @submitted="onLogbookSubmitted" />
   </q-dialog>
 </template>

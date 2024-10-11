@@ -101,7 +101,10 @@ export class LogbookLocalService {
   }
 
   static getLocalLogbooks(): Logbook[] {
-    const localLogbooks = LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
+    const localLogbooks = plainToInstance(
+      Logbook,
+      LocalStorage.getItem(DEF_LOGBOOKS) as any[],
+    );
     if (localLogbooks) {
       const deflogbooks = localLogbooks.filter((lb) => !lb.isDeleted);
       deflogbooks.forEach((lgb) => {
@@ -120,7 +123,10 @@ export class LogbookLocalService {
   }
 
   static getAllLogbooksData() {
-    return LocalStorage.getItem(DEF_LOGBOOKS) as Logbook[];
+    return plainToInstance(
+      Logbook,
+      LocalStorage.getItem(DEF_LOGBOOKS) as any[],
+    );
   }
 
   static saveLogbooksData(logbooks: Logbook[]) {
@@ -148,13 +154,25 @@ export class LogbookLocalService {
       Logbook,
       LogbookLocalService.getLocalLogbooks(),
     );
-    const ourLogbook = logbooks.find((lb) => lb.id === model.id);
 
-    if (ourLogbook) {
-      ourLogbook.update(model);
-      console.log(ourLogbook, logbooks.length);
-      LogbookLocalService.saveLogbooksData(logbooks);
+    const nameExists = logbooks.some(
+      (l) =>
+        l.id != model.id && l.name.toLowerCase() == model.name.toLowerCase(),
+    );
+    if (nameExists) {
+      throw new Error('Logbook with the same name already exists');
     }
+    if (!model.id) {
+      const newLogbook = new Logbook();
+      newLogbook.update(model);
+      logbooks.push(newLogbook);
+    } else {
+      const ourLogbook = logbooks.find((lb) => lb.id === model.id);
+      if (ourLogbook) {
+        ourLogbook.update(model);
+      }
+    }
+    LogbookLocalService.saveLogbooksData(logbooks);
   }
 
   static removeLog(id: string, logBookId: string) {

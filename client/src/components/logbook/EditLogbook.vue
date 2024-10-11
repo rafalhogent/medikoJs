@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Log, Logbook } from 'src/models/logbook/logbook';
+import { Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import { onMounted, Ref, ref } from 'vue';
 import { useAppStore } from 'src/stores/app.store';
 
 const store = useAppStore();
 
-//#region types, props
+//#region types, props, emits
 export interface EditLogbookProps {
   caption?: string;
   link?: string;
@@ -20,6 +20,9 @@ const props = withDefaults(defineProps<EditLogbookProps>(), {
   logbook: undefined,
 });
 
+const emit = defineEmits<{
+  (e: 'submitted', logbook?: Logbook): void;
+}>();
 //#endregion
 
 //#region refs
@@ -29,12 +32,12 @@ const viewModel: Ref<Logbook> = ref({ name: '' } as Logbook);
 
 //#region hooks, handlers
 const submitForm = () => {
-  if (props.logbook) {
-    try {
-      LogbookLocalService.upsertLogbookDefinition(viewModel.value);
-    } catch (error: any) {
-      store.handleError('Failed to save Logbook definition', error.message);
-    }
+  try {
+    LogbookLocalService.upsertLogbookDefinition(viewModel.value);
+  } catch (error: any) {
+    store.handleError('Failed to save Logbook definition', error.message);
+  } finally {
+    emit('submitted');
   }
 };
 
