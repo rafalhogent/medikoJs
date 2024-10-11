@@ -143,6 +143,20 @@ export class LogbookLocalService {
     }
   }
 
+  static upsertLogbookDefinition(model: Logbook) {
+    const logbooks = plainToInstance(
+      Logbook,
+      LogbookLocalService.getLocalLogbooks(),
+    );
+    const ourLogbook = logbooks.find((lb) => lb.id === model.id);
+
+    if (ourLogbook) {
+      ourLogbook.update(model);
+      console.log(ourLogbook, logbooks.length);
+      LogbookLocalService.saveLogbooksData(logbooks);
+    }
+  }
+
   static removeLog(id: string, logBookId: string) {
     const logBooks = LogbookLocalService.getLocalLogbooks();
     const ourLogbook = logBooks.find((lb) => lb.id == logBookId);

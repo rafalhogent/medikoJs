@@ -32,11 +32,10 @@ export class LogbookService {
     });
 
     clientLogbooks?.forEach((clb) => {
-      const dblogbook = dbLogbooks.find((dblb) => dblb.name == clb.name);
+      const dblogbook = dbLogbooks.find((dblb) => dblb.id == clb.id);
       if (dblogbook) {
         if (clb.updatedAt > dblogbook.updatedAt) {
-          dblogbook.isChoosen = clb.isChoosen;
-          dblogbook.updatedAt = clb.updatedAt
+          dblogbook.update(clb);
         }
         clb.logs.forEach((cl) => {
           const dblog = dblogbook.logs.find((l) => l.id == cl.id);

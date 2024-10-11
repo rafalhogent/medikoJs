@@ -20,6 +20,23 @@ export class Logbook extends TrackedEntity {
   icon?: string;
   isChoosen: boolean = false;
   logs: Log[] = [];
+
+  update = (updatedLogbook: Logbook) => {
+    this.name = updatedLogbook.name;
+    this.field1 = updatedLogbook.field1;
+    this.field2 = updatedLogbook.field2;
+    this.field3 = updatedLogbook.field3;
+    this.field4 = updatedLogbook.field4;
+    this.unit1 = updatedLogbook.unit1;
+    this.unit2 = updatedLogbook.unit2;
+    this.unit3 = updatedLogbook.unit3;
+    this.unit4 = updatedLogbook.unit4;
+    this.precision1 = updatedLogbook.precision1;
+    this.precision2 = updatedLogbook.precision2;
+    this.precision3 = updatedLogbook.precision3;
+    this.precision4 = updatedLogbook.precision4;
+    this.updatedAt = new Date();
+  };
 }
 
 export class Log extends TrackedEntity {

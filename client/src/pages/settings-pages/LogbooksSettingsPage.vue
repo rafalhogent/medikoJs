@@ -2,8 +2,11 @@
 import { onMounted, Ref, ref } from 'vue';
 import { Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
+import EditLogbook from 'src/components/logbook/EditLogbook.vue';
 
 const logbooks: Ref<Logbook[]> = ref([]);
+const showDialog: Ref<boolean> = ref(false);
+const currentLogbook: Ref<Logbook | undefined> = ref(undefined);
 
 onMounted(() => {
   logbooks.value = LogbookLocalService.getLocalLogbooks();
@@ -12,6 +15,11 @@ onMounted(() => {
 const onSwitch = (lb: Logbook) => {
   lb.updatedAt = new Date();
   LogbookLocalService.saveLogbooksData(logbooks.value);
+};
+
+const onEditClicked = (logbook: Logbook) => {
+  currentLogbook.value = logbook;
+  showDialog.value = true;
 };
 </script>
 
@@ -43,9 +51,21 @@ const onSwitch = (lb: Logbook) => {
           {{ lb.field4 }}
         </q-item-label>
       </q-item-section>
-      <!-- <q-btn icon="edit" title="Edit logbook" /> -->
+      <q-btn
+        icon="edit"
+        title="Edit logbook"
+        @click="
+          () => {
+            onEditClicked(lb);
+          }
+        "
+      />
     </q-item>
 
     <!-- <q-separator spaced /> -->
   </div>
+
+  <q-dialog class="" v-model="showDialog">
+    <EditLogbook :logbook="currentLogbook" />
+  </q-dialog>
 </template>

@@ -64,8 +64,8 @@ export class Logbook extends TrackedEntity {
   @Column({ nullable: true, default: null })
   icon?: string;
 
-  @Column({nullable: false, default: false})
-  isChoosen: boolean
+  @Column({ nullable: false, default: false })
+  isChoosen: boolean;
 
   @Type(() => Log)
   @OneToMany(() => Log, (l) => l.logbook, { cascade: true })
@@ -83,4 +83,22 @@ export class Logbook extends TrackedEntity {
     foreignKeyConstraintName: FK_LOGBOOK_OWNER,
   })
   owner?: User | null;
+
+  update = (updatedLogbook: Logbook) => {
+    this.name = updatedLogbook.name;
+    this.field1 = updatedLogbook.field1;
+    this.field2 = updatedLogbook.field2;
+    this.field3 = updatedLogbook.field3;
+    this.field4 = updatedLogbook.field4;
+    this.unit1 = updatedLogbook.unit1;
+    this.unit2 = updatedLogbook.unit2;
+    this.unit3 = updatedLogbook.unit3;
+    this.unit4 = updatedLogbook.unit4;
+    this.precision1 = updatedLogbook.precision1;
+    this.precision2 = updatedLogbook.precision2;
+    this.precision3 = updatedLogbook.precision3;
+    this.precision4 = updatedLogbook.precision4;
+    this.isChoosen = updatedLogbook.isChoosen;
+    this.updatedAt = updatedLogbook.updatedAt ?? new Date();
+  };
 }

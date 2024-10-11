@@ -3,7 +3,7 @@ import { QTableProps } from 'quasar';
 import { Log, Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
-import EditLogbook from 'src/components/logbook/EditLogbook.vue';
+import EditLog from 'src/components/logbook/EditLog.vue';
 import { DateTime } from 'luxon';
 import { useAppStore } from 'src/stores/app.store';
 
@@ -179,7 +179,7 @@ onUnmounted(() => {
     </div>
   </q-page>
   <q-dialog v-model="showDialog">
-    <edit-logbook
+    <EditLog
       v-bind:logbook="currentLogbook"
       v-bind:log="currentLog"
       @submited="onDialogSubmitted"
