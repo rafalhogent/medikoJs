@@ -28,7 +28,7 @@ export class RecreateLogbooks1727976469529 implements MigrationInterface {
                 \`updatedAt\` datetime NULL,
                 \`deletedAt\` datetime NULL,
                 \`isDeleted\` tinyint NOT NULL DEFAULT 0,
-                \`name\` varchar(255) NOT NULL,
+                \`name\` varchar(255) NULL,
                 \`field1\` varchar(255) NULL,
                 \`unit1\` varchar(255) NULL,
                 \`precision1\` int NULL,

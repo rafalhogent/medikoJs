@@ -26,31 +26,41 @@ export class LogbookService {
   async syncLogbooksByUser(syncDto: LogbookSyncDto, userId: number) {
     const clientLogbooks = plainToInstance(Logbook, syncDto.logbooks);
 
-    const dbLogbooks = await this.logbooksRepo.find({
-      relations: { logs: true },
-      where: { owner: { id: userId } },
-    });
+    const dbLogbooks = plainToInstance(
+      Logbook,
+      await this.logbooksRepo.find({
+        relations: { logs: true },
+        where: { owner: { id: userId } },
+      }),
+    );
 
-    clientLogbooks?.forEach((clb) => {
+    const logsToRemove = [];
+    clientLogbooks?.forEach(async (clb) => {
       const dblogbook = dbLogbooks.find((dblb) => dblb.id == clb.id);
       if (dblogbook) {
-        if (clb.updatedAt > dblogbook.updatedAt) {
-          dblogbook.update(clb);
-        }
-        clb.logs.forEach((cl) => {
-          const dblog = dblogbook.logs.find((l) => l.id == cl.id);
-          if (dblog) {
-            if (dblog.isDeleted || cl.isDeleted) {
-              dblog.makeDeleted();
-            } else {
-              if (dblog.updatedAt < cl.updatedAt) {
-                dblog.update(cl);
-              }
-            }
-          } else {
-            dblogbook.logs.push(cl);
+        if (clb.isDeleted && !dblogbook.isDeleted) {
+          dblogbook.makeDeleted();
+          logsToRemove.push(...dblogbook.logs);
+        } else if (!dblogbook.isDeleted) {
+          if (clb.updatedAt > dblogbook.updatedAt) {
+            dblogbook.update(clb);
           }
-        });
+
+          clb.logs.forEach((cl) => {
+            const dblog = dblogbook.logs.find((l) => l.id == cl.id);
+            if (dblog) {
+              if (!dblog.isDeleted && cl.isDeleted) {
+                dblog.makeDeleted();
+              } else if (!dblog.isDeleted) {
+                if (dblog.updatedAt < cl.updatedAt) {
+                  dblog.update(cl);
+                }
+              }
+            } else {
+              dblogbook.logs.push(cl);
+            }
+          });
+        }
       } else {
         clb.owner = { id: userId } as User;
         dbLogbooks.push(clb);
@@ -58,6 +68,7 @@ export class LogbookService {
     });
 
     const savedLogbooks = await this.logbooksRepo.save(dbLogbooks);
+    if (logsToRemove.length) await this.logsRepo.remove(logsToRemove);
     return savedLogbooks;
   }
 }

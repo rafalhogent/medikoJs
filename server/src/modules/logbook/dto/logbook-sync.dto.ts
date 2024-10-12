@@ -24,6 +24,7 @@ export class LogbookDto extends TrackedEntity {
   precision4?: number = undefined;
   icon?: string;
   isChoosen: boolean = false;
+  isDeleted?: boolean;
   logs: LogDto[] = [];
 }
 

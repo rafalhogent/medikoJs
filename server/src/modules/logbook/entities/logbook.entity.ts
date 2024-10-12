@@ -22,8 +22,8 @@ export class Logbook extends TrackedEntity {
   constructor() {
     super();
   }
-  @Column({ length: 255, name: LOGBOOK_NAME_COL })
-  name!: string;
+  @Column({ nullable: true, length: 255, name: LOGBOOK_NAME_COL })
+  name?: string;
 
   @Column({ nullable: true, default: null })
   field1?: string;
@@ -100,5 +100,26 @@ export class Logbook extends TrackedEntity {
     this.precision4 = updatedLogbook.precision4;
     this.isChoosen = updatedLogbook.isChoosen;
     this.updatedAt = updatedLogbook.updatedAt ?? new Date();
+  };
+
+  makeDeleted = () => {
+    this.name = null;
+    this.field1 = null;
+    this.field2 = null;
+    this.field3 = null;
+    this.field4 = null;
+    this.unit1 = null;
+    this.unit2 = null;
+    this.unit3 = null;
+    this.unit4 = null;
+    this.precision1 = null;
+    this.precision2 = null;
+    this.precision3 = null;
+    this.precision4 = null;
+    this.isChoosen = false;
+    this.isDeleted = true;
+    this.deletedAt = new Date();
+    this.createdAt = null;
+    this.updatedAt = null;
   };
 }

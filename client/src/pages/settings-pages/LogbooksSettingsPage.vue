@@ -3,13 +3,29 @@ import { onMounted, Ref, ref } from 'vue';
 import { Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import EditLogbook from 'src/components/logbook/EditLogbook.vue';
+import Confirmation from 'src/components/common/Confirmation.vue';
+
 const logbooks: Ref<Logbook[]> = ref([]);
 const showDialog: Ref<boolean> = ref(false);
 const currentLogbook: Ref<Logbook | undefined> = ref(undefined);
 
+const showRemoveDialog = ref(false);
+const logbookToRemove: Ref<Logbook | undefined> = ref(undefined);
+const onRemoveClicked = (logbook: Logbook) => {
+  logbookToRemove.value = logbook;
+  showRemoveDialog.value = true;
+};
+const onRemoveConfirmed = () => {
+  if (logbookToRemove.value) {
+    LogbookLocalService.removeLogbook(logbookToRemove.value.id);
+    refreshLogbooks();
+  }
+};
+
 const refreshLogbooks = () => {
   logbooks.value = LogbookLocalService.getLocalLogbooks();
 };
+
 onMounted(() => {
   refreshLogbooks();
 });
@@ -75,13 +91,20 @@ const onLogbookSubmitted = () => {
           }
         "
       />
+      <q-btn icon="delete" @click="() => onRemoveClicked(lb)" />
     </q-item>
 
     <!-- <q-separator spaced /> -->
   </div>
 
   <q-dialog class="" v-model="showDialog">
-    <!-- <EditLog v-bind:logbook="currentLogbook" @submited="onDialogSubmitted" /> -->
     <EditLogbook :logbook="currentLogbook" @submitted="onLogbookSubmitted" />
+  </q-dialog>
+  <q-dialog v-model="showRemoveDialog">
+    <Confirmation
+      message="Are you sure you want delete this logbook?"
+      confirm-color="negative"
+      @confirm="onRemoveConfirmed"
+    />
   </q-dialog>
 </template>

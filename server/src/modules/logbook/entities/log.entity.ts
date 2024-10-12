@@ -55,13 +55,13 @@ export class Log extends TrackedEntity {
 
   makeDeleted() {
     this.moment = null;
-    delete this.value1;
-    delete this.value2;
-    delete this.value3;
-    delete this.value4;
-    delete this.comment;
-    delete this.createdAt;
-    delete this.updatedAt;
+    this.value1 = null;
+    this.value2 = null;
+    this.value3 = null;
+    this.value4 = null;
+    this.comment = null;
+    this.createdAt = null;
+    this.updatedAt = null;
     this.isDeleted = true;
     this.deletedAt = new Date();
   }

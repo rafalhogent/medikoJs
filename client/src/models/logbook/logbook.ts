@@ -4,7 +4,7 @@ export class Logbook extends TrackedEntity {
   constructor() {
     super();
   }
-  name!: string;
+  name?: string;
   field1?: string;
   unit1?: string;
   precision1?: number = undefined;
@@ -36,6 +36,25 @@ export class Logbook extends TrackedEntity {
     this.precision3 = updatedLogbook.precision3;
     this.precision4 = updatedLogbook.precision4;
     this.updatedAt = new Date();
+  };
+
+  makeDeleted = () => {
+    delete this.name;
+    delete this.field1;
+    delete this.field2;
+    delete this.field3;
+    delete this.field4;
+    delete this.unit1;
+    delete this.unit2;
+    delete this.unit3;
+    delete this.unit4;
+    delete this.precision1;
+    delete this.precision2;
+    delete this.precision3;
+    delete this.precision4;
+    delete this.updatedAt;
+    this.deletedAt = new Date();
+    this.isDeleted = true;
   };
 }
 

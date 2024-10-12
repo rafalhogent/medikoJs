@@ -157,7 +157,10 @@ export class LogbookLocalService {
 
     const nameExists = logbooks.some(
       (l) =>
-        l.id != model.id && l.name.toLowerCase() == model.name.toLowerCase(),
+        l.id != model.id &&
+        l.name &&
+        model.name &&
+        l.name.toLowerCase() == model.name.toLowerCase(),
     );
     if (nameExists) {
       throw new Error('Logbook with the same name already exists');
@@ -173,6 +176,15 @@ export class LogbookLocalService {
       }
     }
     LogbookLocalService.saveLogbooksData(logbooks);
+  }
+
+  static removeLogbook(logbookId: string) {
+    const logbooks = LogbookLocalService.getLocalLogbooks();
+    const ourLogbook = logbooks.find((lb) => lb.id == logbookId);
+    if (ourLogbook) {
+      ourLogbook.makeDeleted();
+      LogbookLocalService.saveLogbooksData(logbooks);
+    }
   }
 
   static removeLog(id: string, logBookId: string) {
