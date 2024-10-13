@@ -40,6 +40,7 @@ export class Logbook extends TrackedEntity {
 
   makeDeleted = () => {
     delete this.name;
+    delete this.icon;
     delete this.field1;
     delete this.field2;
     delete this.field3;
@@ -53,8 +54,13 @@ export class Logbook extends TrackedEntity {
     delete this.precision3;
     delete this.precision4;
     delete this.updatedAt;
+    delete this.createdAt;
+    this.isChoosen = false;
+    this.logs = [];
     this.deletedAt = new Date();
     this.isDeleted = true;
+
+    console.log('thislb', this);
   };
 }
 

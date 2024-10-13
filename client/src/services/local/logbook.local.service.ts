@@ -4,6 +4,7 @@ import { DEF_LOGBOOKS } from './local-keys';
 import { DateTime } from 'luxon';
 import { plainToInstance } from 'class-transformer';
 import { v4 as uuidv4 } from 'uuid';
+import Factory from '../service-factory';
 
 export class LogbookLocalService {
   static ensureDefaultLogbooks() {
@@ -93,9 +94,11 @@ export class LogbookLocalService {
       },
     ];
 
-    const deflogbooks = LogbookLocalService.getLocalLogbooks();
+    const deflogbooks = LogbookLocalService.getAllLogbooksData();
+    const authdata =
+      Factory.getAuthLocalStorageService().getAuthDataFromStorage();
 
-    if (!deflogbooks?.length) {
+    if (!deflogbooks && !authdata) {
       LocalStorage.setItem(DEF_LOGBOOKS, logbooks);
     }
   }
@@ -105,8 +108,8 @@ export class LogbookLocalService {
       Logbook,
       LocalStorage.getItem(DEF_LOGBOOKS) as any[],
     );
-    if (localLogbooks) {
-      const deflogbooks = localLogbooks.filter((lb) => !lb.isDeleted);
+    if (Array.isArray(localLogbooks) && localLogbooks?.length) {
+      const deflogbooks = localLogbooks?.filter((lb) => !lb.isDeleted);
       deflogbooks.forEach((lgb) => {
         lgb.logs = lgb.logs
           .filter((l) => !l.isDeleted)
@@ -123,10 +126,9 @@ export class LogbookLocalService {
   }
 
   static getAllLogbooksData() {
-    return plainToInstance(
-      Logbook,
-      LocalStorage.getItem(DEF_LOGBOOKS) as any[],
-    );
+    const localLogbooksData = LocalStorage.getItem(DEF_LOGBOOKS) as any[];
+    const logbooks = plainToInstance(Logbook, localLogbooksData);
+    return logbooks;
   }
 
   static saveLogbooksData(logbooks: Logbook[]) {
@@ -152,7 +154,7 @@ export class LogbookLocalService {
   static upsertLogbookDefinition(model: Logbook) {
     const logbooks = plainToInstance(
       Logbook,
-      LogbookLocalService.getLocalLogbooks(),
+      LogbookLocalService.getAllLogbooksData(),
     );
 
     const nameExists = logbooks.some(
@@ -179,7 +181,7 @@ export class LogbookLocalService {
   }
 
   static removeLogbook(logbookId: string) {
-    const logbooks = LogbookLocalService.getLocalLogbooks();
+    const logbooks = LogbookLocalService.getAllLogbooksData();
     const ourLogbook = logbooks.find((lb) => lb.id == logbookId);
     if (ourLogbook) {
       ourLogbook.makeDeleted();
@@ -203,5 +205,6 @@ export class LogbookLocalService {
 
   static clearLocalLogbooksData() {
     LocalStorage.removeItem(DEF_LOGBOOKS);
+    this.ensureDefaultLogbooks();
   }
 }

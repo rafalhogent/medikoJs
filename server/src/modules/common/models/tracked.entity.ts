@@ -7,11 +7,11 @@ export class TrackedEntity {
 
   @Type(() => Date)
   @Column({ nullable: true })
-  createdAt?: Date = new Date();
+  createdAt?: Date | null;
 
   @Type(() => Date)
   @Column({ nullable: true })
-  updatedAt?: Date = new Date();
+  updatedAt?: Date | null;
 
   @Type(() => Date)
   @Column({ nullable: true })

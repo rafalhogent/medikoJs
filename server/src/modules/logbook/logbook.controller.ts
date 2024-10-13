@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { LogbookService } from './logbook.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { LogbookSyncDto } from './dto/logbook-sync.dto';
 
 @Controller('logbook')
 export class LogbookController {
@@ -21,7 +22,7 @@ export class LogbookController {
 
   @UseGuards(AuthGuard)
   @Patch()
-  syncDefaultLogbooks(@Body() syncDto: any, @Request() req) {
+  syncDefaultLogbooks(@Body() syncDto: LogbookSyncDto, @Request() req) {
     return this.logbookService.syncLogbooksByUser(syncDto, req.user.sub);
   }
 }
