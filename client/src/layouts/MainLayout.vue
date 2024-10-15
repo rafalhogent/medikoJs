@@ -150,7 +150,8 @@ const topLinks: EssentialLinkProps[] = [
     title: 'About',
     caption: 'Application Info',
     icon: 'mdi-information-outline',
-    disable: true,
+    route: '/about',
+    disable: false,
   },
   {
     title: 'Github',

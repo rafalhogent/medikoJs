@@ -29,3 +29,13 @@ $warning   : #F2C037;
     font-size: 16px;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  a {
+    color: lightblue;
+    text-decoration: none;
+  }
+  a:visited {
+    color: pink;
+  }
+}
