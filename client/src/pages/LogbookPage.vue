@@ -106,10 +106,6 @@ const onDeleteLog = (id: string) => {
   }
 };
 
-const onGoToSettingsCLicked = () => {
-  appStore.prepareLogbookSettingsPage();
-};
-
 onMounted(() => {
   logbooks.value = LogbookLocalService.getLocalLogbooks();
   const tabs = logbooks.value
@@ -120,8 +116,8 @@ onMounted(() => {
       label: lb.name,
     }));
 
-  tabs.sort((a, b) => {
-    return -1 * a.label.localeCompare(b.label);
+  tabs.sort((a: any, b: any) => {
+    return -1 * a?.label.localeCompare(b?.label);
   });
 
   appStore.toolbarTabs = tabs;
@@ -172,7 +168,6 @@ onUnmounted(() => {
             icon="settings"
             title="Manage logbooks"
             to="/settings/logbooks"
-            @click="onGoToSettingsCLicked"
           />
         </template>
       </q-table>

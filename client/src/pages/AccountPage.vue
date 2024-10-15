@@ -5,8 +5,10 @@ import Factory from 'src/services/service-factory';
 import { useAppStore } from 'src/stores/app.store';
 import RegisterForm from 'src/components/account/RegisterForm.vue';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
+import { useRouter } from 'vue-router';
 
 const store = useAppStore();
+const router = useRouter();
 const showLoginDialog = ref(false);
 const showRegisterDialog = ref(false);
 const onInfoClick = async () => {
@@ -27,11 +29,15 @@ const onLogoutClick = () => {
   Factory.getAuthLocalStorageService().clearLocalAuthData();
   LogbookLocalService.clearLocalLogbooksData();
 };
+
+const onServerSettingsClick = () => {
+  router.push('/settings/account');
+};
 </script>
 
 <template>
   <q-page>
-    <q-card class="q-my-xl q-pa-lg" flat>
+    <q-card class="q-pa-lg" flat>
       <q-card-actions align="center" vertical>
         <div class="q-mt-xl q-mb-none">
           <q-icon color="grey" name="mdi-account-box-outline" size="150px" />
@@ -44,12 +50,14 @@ const onLogoutClick = () => {
           icon="login"
           label="login"
           @click="() => (showLoginDialog = true)"
+          :disable="!store.serverAddress"
         />
         <q-btn
           color="primary"
           icon="mdi-account-plus-outline"
           label="register"
           @click="() => (showRegisterDialog = true)"
+          :disable="!store.serverAddress"
         />
         <q-btn
           color="primary"
@@ -63,14 +71,26 @@ const onLogoutClick = () => {
           icon="mdi-account"
           label="info"
           @click="onInfoClick"
-          :disable="!store.username"
+          :disable="!store.username || !store.serverAddress"
         />
         <q-btn
           color="primary"
           icon="mdi-sync"
           label="sync"
           @click="onSyncClick"
-          :disable="!store.username"
+          :disable="!store.username || !store.serverAddress"
+        />
+      </q-card-actions>
+      <div v-if="!store.serverAddress" class="q-ma-md text-center">
+        <q-icon name="error" color="negative" size="md" />
+        Cloud-server address not defined. Open server settings to set server
+        address.
+      </div>
+      <q-card-actions align="center">
+        <q-btn
+          icon="mdi-cloud-outline"
+          label="account & server settings"
+          @click="onServerSettingsClick"
         />
       </q-card-actions>
     </q-card>

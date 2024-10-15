@@ -6,8 +6,8 @@ import { Notify } from 'quasar';
 export const useAppStore = defineStore('appStore', () => {
   const toolbarTabs: Ref<QTabProps[]> = ref([]);
   const selectedTab = ref('');
-
   const username: Ref<string | undefined> = ref(undefined);
+  const serverAddress: Ref<string | undefined> = ref();
 
   //#region ui handlers
   const handleSuccess = (message: string, caption?: string) => {
@@ -56,14 +56,20 @@ export const useAppStore = defineStore('appStore', () => {
     icon: 'mdi-book-open-outline',
     to: '/settings/logbooks',
     onClick: (e: Event) => {
-      prepareLogbookSettingsPage();
+      settingsCrumbs.value = [settingsCrumb, logbooksCrumb];
+    },
+  };
+  const accountCrumb: QBreadcrumbsElProps = {
+    label: 'Account & Server',
+    icon: 'mdi-cloud-outline',
+    to: '/settings/account',
+    onClick: (e: Event) => {
+      settingsCrumbs.value = [settingsCrumb, accountCrumb];
     },
   };
 
   const settingsCrumbs: Ref<QBreadcrumbsElProps[]> = ref([settingsCrumb]);
-  const prepareLogbookSettingsPage = () => {
-    settingsCrumbs.value = [settingsCrumb, logbooksCrumb];
-  };
+
   const resetSettingsPage = () => {
     settingsCrumbs.value = [settingsCrumb];
   };
@@ -76,7 +82,10 @@ export const useAppStore = defineStore('appStore', () => {
     handleSuccess,
     handleError,
     settingsCrumbs,
-    prepareLogbookSettingsPage,
     resetSettingsPage,
+    serverAddress,
+    settingsCrumb,
+    logbooksCrumb,
+    accountCrumb,
   };
 });

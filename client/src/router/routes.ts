@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
             component: () =>
               import('pages/settings-pages/MainSettingsPage.vue'),
           },
+          {
+            path: 'account',
+            component: () =>
+              import('pages/settings-pages/AccountSettingsPage.vue'),
+          },
         ],
       },
       { path: 'account', component: () => import('pages/AccountPage.vue') },

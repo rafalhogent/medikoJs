@@ -4,6 +4,8 @@ import { Logbook } from 'src/models/logbook/logbook';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import EditLogbook from 'src/components/logbook/EditLogbook.vue';
 import Confirmation from 'src/components/common/Confirmation.vue';
+import { useAppStore } from 'src/stores/app.store';
+const store = useAppStore();
 
 const logbooks: Ref<Logbook[]> = ref([]);
 const showDialog: Ref<boolean> = ref(false);
@@ -27,6 +29,7 @@ const refreshLogbooks = () => {
 };
 
 onMounted(() => {
+  store.settingsCrumbs = [store.settingsCrumb, store.logbooksCrumb];
   refreshLogbooks();
 });
 

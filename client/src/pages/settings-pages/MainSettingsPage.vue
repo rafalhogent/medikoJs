@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAppStore } from 'src/stores/app.store';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const store = useAppStore();
@@ -15,14 +16,26 @@ const settingsItems: {
   {
     icon: 'mdi-book-open-outline',
     label: 'Logbooks Settings',
-    description: 'Select visible logbooks',
+    description: 'Select & manage visible logbooks',
     to: '/settings/logbooks',
     action: () => {
-      store.prepareLogbookSettingsPage();
       router.push('/settings/logbooks');
     },
   },
+  {
+    icon: 'mdi-cloud-outline',
+    label: 'Account & Server Settings',
+    description: 'Manage online account & cloud server settings',
+    to: '/settings/logbooks',
+    action: () => {
+      router.push('/settings/account');
+    },
+  },
 ];
+
+onMounted(() => {
+  store.settingsCrumbs = [store.settingsCrumb];
+});
 </script>
 
 <template>

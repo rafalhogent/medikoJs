@@ -6,19 +6,24 @@ import { useAppStore } from 'src/stores/app.store';
 import { IAuthLocalStorage } from '../local/auth.local.service';
 import { LogbookLocalService } from '../local/logbook.local.service';
 import Factory from '../service-factory';
-
+import { QVueGlobals, useQuasar } from 'quasar';
+import { isSpaPlatform } from 'src/utils/app-utils';
+const backend_url_env = import.meta.env.VITE_BACKEND_BASE_URL;
 const store = useAppStore();
 
 export class AuthService {
   private readonly storageService: IAuthLocalStorage;
   private readonly axiosClient: AxiosInstance;
+  private readonly quasarGlobals: QVueGlobals;
 
   constructor(
     axiosClient: AxiosInstance,
     localStorageService: IAuthLocalStorage,
+    quasar: QVueGlobals,
   ) {
     this.axiosClient = axiosClient;
     this.storageService = localStorageService;
+    this.quasarGlobals = quasar;
   }
 
   async loginToServer(dto: LoginDto) {
@@ -99,6 +104,33 @@ export class AuthService {
       this.axiosClient.defaults.headers.common['Authorization'] =
         `Bearer ${auth_data.access_token}`;
       store.username = auth_data.user;
+    }
+  }
+
+  setBackendUrl(address: string) {
+    this.axiosClient.defaults.baseURL = address;
+    this.storageService.setCloudServerAddress(address);
+    store.serverAddress = address;
+  }
+
+  refreshBackendUrlFromStorage() {
+    const url = this.storageService.getCloudServerAddress();
+    if (url?.length) {
+      this.setBackendUrl(url);
+    }
+  }
+
+  loadBackendUrlFromEnv() {
+    if (backend_url_env?.length) {
+      this.setBackendUrl(backend_url_env);
+    }
+  }
+
+  ensureBackendUrlLoaded() {
+    if (isSpaPlatform(this.quasarGlobals)) {
+      this.loadBackendUrlFromEnv();
+    } else {
+      this.refreshBackendUrlFromStorage();
     }
   }
 }

@@ -7,8 +7,10 @@ import {
 } from './local/auth.local.service';
 import { useAppStore } from 'src/stores/app.store';
 import { SyncService } from './cloud/sync.service';
-const backend_url = import.meta.env.VITE_BACKEND_BASE_URL;
+import { useQuasar } from 'quasar';
+
 const store = useAppStore();
+const backend_url = store.serverAddress;
 
 export default class Factory {
   private static axiosClient: AxiosInstance;
@@ -72,9 +74,11 @@ export default class Factory {
 
   static getAuthService() {
     if (!this.authService) {
+      const $q = useQuasar();
       this.authService = new AuthService(
         this.getAxiosClient(),
         this.getAuthLocalStorageService(),
+        $q,
       );
     }
     return this.authService;
