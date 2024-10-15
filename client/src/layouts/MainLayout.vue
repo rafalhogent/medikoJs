@@ -40,26 +40,49 @@
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <div class="flex q-mb-md">
-        <q-icon name="mdi-heart-pulse" color="blue" size="lg" left />
-        <span class="text-h6">Mediko</span>
-        <q-space />
-        <q-btn
-          flat
-          dense
-          round
-          icon="mdi-chevron-double-left"
-          @click="toggleLeftDrawer"
-        />
-      </div>
-      <q-list>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-          :title="link.title"
-        />
-      </q-list>
+      <q-btn
+        style="position: fixed; right: -5px; z-index: 100"
+        flat
+        dense
+        icon="mdi-chevron-double-left"
+        @click="toggleLeftDrawer"
+      />
+
+      <q-scroll-area
+        class="fit"
+        :content-style="{ display: 'flex', flexDirection: 'column' }"
+      >
+        <div class="row" style="min-height: 100%; flex-grow: 1">
+          <div class="flex column justify-between">
+            <div class="top-links q-py-md">
+              <EssentialLink
+                v-for="link in topLinks"
+                :key="link.title"
+                v-bind="link"
+                :title="link.title"
+              />
+            </div>
+            <div class="bottom-links q-py-lg">
+              <EssentialLink
+                icon="mdi-account-circle"
+                :key="'Account'"
+                :title="appStore.username?.toUpperCase() ?? 'Online Account'"
+                :route="'/account'"
+                :caption="
+                  appStore.username
+                    ? 'You are logged in'
+                    : 'Login/register to sync data with server'
+                "
+              />
+              <div
+                class="text-caption text-weight-light float-right q-mt-md q-pr-md"
+              >
+                MedikoJs-client <q-badge>v{{ version }}</q-badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
@@ -76,8 +99,9 @@ import EssentialLink, {
 import { useAppStore } from 'src/stores/app.store';
 import { LogbookLocalService } from 'src/services/local/logbook.local.service';
 import Factory from 'src/services/service-factory';
+import { version } from '../../package.json';
 
-const essentialLinks: EssentialLinkProps[] = [
+const topLinks: EssentialLinkProps[] = [
   {
     title: 'Timeline',
     caption: 'Home page',
@@ -141,15 +165,9 @@ const essentialLinks: EssentialLinkProps[] = [
     route: '/settings/main',
     disable: false,
   },
-  {
-    title: 'Account',
-    caption: 'Login/register to sync data with server',
-    icon: 'mdi-account',
-    route: '/account',
-  },
 ];
-const leftDrawerOpen = ref(false);
 
+const leftDrawerOpen = ref(false);
 const appStore = useAppStore();
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
