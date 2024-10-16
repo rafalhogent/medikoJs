@@ -74,11 +74,10 @@ export default class Factory {
 
   static getAuthService() {
     if (!this.authService) {
-      const $q = useQuasar();
       this.authService = new AuthService(
         this.getAxiosClient(),
         this.getAuthLocalStorageService(),
-        $q,
+        useQuasar(),
       );
     }
     return this.authService;

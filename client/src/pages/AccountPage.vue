@@ -20,9 +20,14 @@ const onInfoClick = async () => {
     );
 };
 
+const isSyncing = ref(false);
 const onSyncClick = async () => {
-  store.handleSuccess('sync begun...');
-  await Factory.getSyncService().syncLogbooks();
+  isSyncing.value = true;
+  Factory.getSyncService()
+    .syncAllData()
+    .then(() => {
+      isSyncing.value = false;
+    });
 };
 
 const onLogoutClick = () => {
@@ -78,7 +83,7 @@ const onServerSettingsClick = () => {
           icon="mdi-sync"
           label="sync"
           @click="onSyncClick"
-          :disable="!store.username || !store.serverAddress"
+          :disable="!store.username || !store.serverAddress || isSyncing"
         />
       </q-card-actions>
       <div v-if="!store.serverAddress" class="q-ma-md text-center">
