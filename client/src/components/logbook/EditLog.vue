@@ -85,7 +85,7 @@ onMounted(() => {
   const lg = props.log;
   const inputFIelds: InputValueFields[] = [];
   if (lgb) {
-    for (let i = 1; i < 4; i++) {
+    for (let i = 1; i <= 4; i++) {
       const fname: string = `field${i}`;
       const vname: string = `value${i}`;
       const uname: string = `unit${i}`;
