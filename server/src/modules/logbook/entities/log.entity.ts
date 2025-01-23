@@ -28,7 +28,7 @@ export class Log extends TrackedEntity {
   @Column({ nullable: true, default: null, type: 'double' })
   value4?: number;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ length: 2048, nullable: true })
   comment?: string;
 
   [LOG_LOGBOOK_COL]: string;
