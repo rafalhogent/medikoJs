@@ -20,6 +20,18 @@
       />
       <span>{{ store.serverAddress ?? 'unknown' }}</span>
     </div>
+    <div>
+      <div class="q-pa-md">
+        <q-btn
+          no-caps
+          icon="mdi-sync"
+          color="purple"
+          :loading="false"
+          @click="showNotif"
+          label="Synchronize now"
+        />
+      </div>
+    </div>
   </div>
   <q-dialog v-model="cloudAddressDialog">
     <q-card style="width: 90%; max-width: 600px">
@@ -59,6 +71,10 @@ const serverAddressRef: Ref<string | undefined> = ref(undefined);
 const onAddressSave = () => {
   if (serverAddressRef.value)
     Factory.getAuthService().setBackendUrl(serverAddressRef.value);
+};
+
+const showNotif = async () => {
+  Factory.getSyncService().syncAllData();
 };
 
 onMounted(() => {

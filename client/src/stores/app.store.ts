@@ -1,15 +1,22 @@
 import { defineStore } from 'pinia';
-import { QBreadcrumbsElProps, QTabProps } from 'quasar';
+import {
+  QBreadcrumbsElProps,
+  QNotifyCreateOptions,
+  QNotifyUpdateOptions,
+  QTabProps,
+  useQuasar,
+} from 'quasar';
 import { Ref, ref } from 'vue';
 import { Notify } from 'quasar';
 
 export const useAppStore = defineStore('appStore', () => {
+  const $q = useQuasar();
   const toolbarTabs: Ref<QTabProps[]> = ref([]);
   const selectedTab = ref('');
   const username: Ref<string | undefined> = ref(undefined);
   const serverAddress: Ref<string | undefined> = ref();
 
-  //#region ui handlers
+  //#region ui & notif handlers
   const handleSuccess = (message: string, caption?: string) => {
     Notify.create({
       message: message,
@@ -38,6 +45,33 @@ export const useAppStore = defineStore('appStore', () => {
         },
       ],
     });
+  };
+
+  const syncNotif: Ref<((props?: QNotifyUpdateOptions) => void) | undefined> =
+    ref();
+
+  const syncNotifyProps: QNotifyCreateOptions = {
+    group: false,
+    timeout: 0,
+    spinner: true,
+    color: 'teal-8',
+    message: 'Synchronizing...',
+  };
+
+  const startSyncNotif = (options?: QNotifyUpdateOptions) => {
+    syncNotif.value = $q.notify(options ?? syncNotifyProps);
+  };
+  const updateSyncNotif = (options?: QNotifyUpdateOptions) => {
+    if (syncNotif.value) syncNotif.value(options);
+  };
+  const stopSyncNotif = () => {
+    if (syncNotif.value)
+      syncNotif.value({
+        icon: 'done',
+        spinner: false,
+        message: 'Synchronization done!',
+        timeout: 2000,
+      });
   };
   //#endregion
 
@@ -87,5 +121,8 @@ export const useAppStore = defineStore('appStore', () => {
     settingsCrumb,
     logbooksCrumb,
     accountCrumb,
+    startSyncNotif,
+    updateSyncNotif,
+    stopSyncNotif,
   };
 });
