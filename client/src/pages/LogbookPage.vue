@@ -6,11 +6,20 @@ import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 import EditLog from 'src/components/logbook/EditLog.vue';
 import { DateTime } from 'luxon';
 import { useAppStore } from 'src/stores/app.store';
+import _ from 'lodash';
 
 //#region refs, computed
 const logbooks: Ref<Logbook[]> = ref([]);
 const currentLogbook = computed(() => {
-  return logbooks.value.find((lb) => lb.id.toString() == appStore.selectedTab);
+  const myLogbook = logbooks.value.find(
+    (lb) => lb.id.toString() == appStore.selectedTab,
+  );
+  return myLogbook;
+});
+const myLogs = computed(() => {
+  const myLogsObs = currentLogbook.value?.logs;
+  const sortedlogs = _.orderBy(myLogsObs, (x) => x.moment, 'desc');
+  return sortedlogs;
 });
 
 const appStore = useAppStore();
@@ -144,7 +153,7 @@ onUnmounted(() => {
         separator="horizontal"
         bordered
         :title="currentLogbook?.name ?? '?'"
-        :rows="currentLogbook?.logs ?? []"
+        :rows="myLogs ?? []"
         :columns="columns"
         row-key="index"
         virtual-scroll
