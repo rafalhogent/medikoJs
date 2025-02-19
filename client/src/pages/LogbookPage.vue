@@ -170,7 +170,7 @@ onUnmounted(() => {
             color="primary"
             icon="add"
             :disable="false"
-            label="Add Log"
+            label="Add"
             @click="editLog"
           />
           <q-btn

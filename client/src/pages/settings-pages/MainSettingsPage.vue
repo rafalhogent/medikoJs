@@ -2,6 +2,7 @@
 import { useAppStore } from 'src/stores/app.store';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 const store = useAppStore();
 const router = useRouter();
@@ -36,9 +37,11 @@ const settingsItems: {
 onMounted(() => {
   store.settingsCrumbs = [store.settingsCrumb];
 });
+const $q = useQuasar();
 </script>
 
 <template>
+  <!-- <div>{{ $q.dark.isActive ? 'dark' : 'light' }}</div> -->
   <q-list class="q-ma-lg">
     <q-item
       v-for="item in settingsItems"
@@ -53,9 +56,9 @@ onMounted(() => {
         <q-icon :name="item.icon" />
       </q-item-section>
       <q-item-section>{{ item.label }}</q-item-section>
-      <q-item-section side>
-        <q-item-label caption>{{ item.description }}</q-item-label>
-      </q-item-section>
+      <!-- <q-item-section side>
+        <q-item-label flex caption>{{ item.description }}</q-item-label>
+      </q-item-section> -->
     </q-item>
   </q-list>
 </template>

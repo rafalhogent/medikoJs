@@ -1,0 +1,28 @@
+{
+  "name": "org.cordova.quasar.mediko",
+  "displayName": "Mediko",
+  "version": "0.0.4",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "userInterfaceStyle": "automatic",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^13.0.0",
+    "cordova-plugin-android-dark-mode-support": "^2.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-android-dark-mode-support": {}
+    }
+  }
+}
