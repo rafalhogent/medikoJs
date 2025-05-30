@@ -42,7 +42,7 @@ export class LogbookLocalService {
           id: uuidv4(),
           name: 'temperature',
           field1: 'temperature',
-          unit1: '℃',
+          unit1: '°C',
           precision1: 1,
           icon: 'mdi-thermometer',
           isChoosen: true,
